@@ -272,7 +272,7 @@ def get_init_cell(batch_size, rnn_size):
     """
     # TODO: Implement Function
     lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size)
-    cell = tf.contrib.rnn.MultiRNNCell([lstm] * 2)
+    cell = tf.contrib.rnn.MultiRNNCell([lstm] * 3)
     initial_state = cell.zero_state(batch_size, tf.float32)
     initial_state = tf.identity(initial_state, name='initial_state')
     return cell, initial_state
@@ -457,17 +457,17 @@ tests.test_get_batches(get_batches)
 # Number of Epochs
 num_epochs = 200
 # Batch Size
-batch_size = 10
+batch_size = 256
 # RNN Size
 rnn_size = 512
 # Embedding Dimension Size
-embed_dim = 300
+embed_dim = 256
 # Sequence Length
-seq_length = 115
+seq_length = 12
 # Learning Rate
 learning_rate = 0.001
 # Show stats for every n number of batches
-show_every_n_batches = 30
+show_every_n_batches = 11
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
@@ -579,7 +579,7 @@ helper.save_params((seq_length, save_dir))
 
 # # 检查点
 
-# In[21]:
+# In[29]:
 
 
 """
@@ -605,7 +605,7 @@ seq_length, load_dir = helper.load_params()
 # 
 # 返回下列元组中的 tensor `(InputTensor, InitialStateTensor, FinalStateTensor, ProbsTensor)`
 
-# In[23]:
+# In[30]:
 
 
 def get_tensors(loaded_graph):
@@ -631,7 +631,7 @@ tests.test_get_tensors(get_tensors)
 # ### 选择词汇
 # 实现 `pick_word()` 函数来使用 `probabilities` 选择下一个词汇。
 
-# In[25]:
+# In[31]:
 
 
 def pick_word(probabilities, int_to_vocab):
@@ -642,9 +642,7 @@ def pick_word(probabilities, int_to_vocab):
     :return: String of the predicted word
     """
     # TODO: Implement Function
-    next_word_key = np.argmax(probabilities)
-    next_word = int_to_vocab[next_word_key]
-    return next_word
+    return np.random.choice(list(int_to_vocab.values()), p=probabilities)
 
 
 """
@@ -656,7 +654,7 @@ tests.test_pick_word(pick_word)
 # ## 生成电视剧剧本
 # 这将为你生成一个电视剧剧本。通过设置 `gen_length` 来调整你想生成的剧本长度。
 
-# In[26]:
+# In[32]:
 
 
 gen_length = 200

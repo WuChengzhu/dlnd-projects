@@ -15162,7 +15162,7 @@ Default GPU Device: /gpu:0
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: Implement Function</span>
     <span class="n">lstm</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">BasicLSTMCell</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">)</span>
-    <span class="n">cell</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">MultiRNNCell</span><span class="p">([</span><span class="n">lstm</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">MultiRNNCell</span><span class="p">([</span><span class="n">lstm</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">initial_state</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">zero_state</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">initial_state</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cell</span><span class="p">,</span> <span class="n">initial_state</span>
@@ -15505,17 +15505,17 @@ Default GPU Device: /gpu:0
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Number of Epochs</span>
 <span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">200</span>
 <span class="c1"># Batch Size</span>
-<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">256</span>
 <span class="c1"># RNN Size</span>
 <span class="n">rnn_size</span> <span class="o">=</span> <span class="mi">512</span>
 <span class="c1"># Embedding Dimension Size</span>
-<span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">256</span>
 <span class="c1"># Sequence Length</span>
-<span class="n">seq_length</span> <span class="o">=</span> <span class="mi">115</span>
+<span class="n">seq_length</span> <span class="o">=</span> <span class="mi">12</span>
 <span class="c1"># Learning Rate</span>
 <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
 <span class="c1"># Show stats for every n number of batches</span>
-<span class="n">show_every_n_batches</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">show_every_n_batches</span> <span class="o">=</span> <span class="mi">11</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">DON&#39;T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE</span>
@@ -15612,7 +15612,7 @@ Default GPU Device: /gpu:0
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(60, 2, 10, 115)</pre>
+<pre>(22, 2, 256, 12)</pre>
 </div>
 
 </div>
@@ -15679,406 +15679,406 @@ Default GPU Device: /gpu:0
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Epoch:   1/200 Iteration:    30/12000 Tran_loss: 6.558
-Epoch:   1/200 Iteration:    60/12000 Tran_loss: 6.340
-Epoch:   2/200 Iteration:    30/12000 Tran_loss: 6.212
-Epoch:   2/200 Iteration:    60/12000 Tran_loss: 6.189
-Epoch:   3/200 Iteration:    30/12000 Tran_loss: 6.229
-Epoch:   3/200 Iteration:    60/12000 Tran_loss: 6.190
-Epoch:   4/200 Iteration:    30/12000 Tran_loss: 6.216
-Epoch:   4/200 Iteration:    60/12000 Tran_loss: 6.179
-Epoch:   5/200 Iteration:    30/12000 Tran_loss: 6.220
-Epoch:   5/200 Iteration:    60/12000 Tran_loss: 6.174
-Epoch:   6/200 Iteration:    30/12000 Tran_loss: 6.214
-Epoch:   6/200 Iteration:    60/12000 Tran_loss: 6.174
-Epoch:   7/200 Iteration:    30/12000 Tran_loss: 6.234
-Epoch:   7/200 Iteration:    60/12000 Tran_loss: 6.149
-Epoch:   8/200 Iteration:    30/12000 Tran_loss: 6.095
-Epoch:   8/200 Iteration:    60/12000 Tran_loss: 5.962
-Epoch:   9/200 Iteration:    30/12000 Tran_loss: 5.993
-Epoch:   9/200 Iteration:    60/12000 Tran_loss: 5.872
-Epoch:  10/200 Iteration:    30/12000 Tran_loss: 5.917
-Epoch:  10/200 Iteration:    60/12000 Tran_loss: 5.799
-Epoch:  11/200 Iteration:    30/12000 Tran_loss: 5.855
-Epoch:  11/200 Iteration:    60/12000 Tran_loss: 5.728
-Epoch:  12/200 Iteration:    30/12000 Tran_loss: 5.790
-Epoch:  12/200 Iteration:    60/12000 Tran_loss: 5.659
-Epoch:  13/200 Iteration:    30/12000 Tran_loss: 5.739
-Epoch:  13/200 Iteration:    60/12000 Tran_loss: 5.604
-Epoch:  14/200 Iteration:    30/12000 Tran_loss: 5.679
-Epoch:  14/200 Iteration:    60/12000 Tran_loss: 5.531
-Epoch:  15/200 Iteration:    30/12000 Tran_loss: 5.608
-Epoch:  15/200 Iteration:    60/12000 Tran_loss: 5.481
-Epoch:  16/200 Iteration:    30/12000 Tran_loss: 5.550
-Epoch:  16/200 Iteration:    60/12000 Tran_loss: 5.421
-Epoch:  17/200 Iteration:    30/12000 Tran_loss: 5.476
-Epoch:  17/200 Iteration:    60/12000 Tran_loss: 5.345
-Epoch:  18/200 Iteration:    30/12000 Tran_loss: 5.396
-Epoch:  18/200 Iteration:    60/12000 Tran_loss: 5.278
-Epoch:  19/200 Iteration:    30/12000 Tran_loss: 5.326
-Epoch:  19/200 Iteration:    60/12000 Tran_loss: 5.211
-Epoch:  20/200 Iteration:    30/12000 Tran_loss: 5.237
-Epoch:  20/200 Iteration:    60/12000 Tran_loss: 5.123
-Epoch:  21/200 Iteration:    30/12000 Tran_loss: 5.132
-Epoch:  21/200 Iteration:    60/12000 Tran_loss: 5.015
-Epoch:  22/200 Iteration:    30/12000 Tran_loss: 5.049
-Epoch:  22/200 Iteration:    60/12000 Tran_loss: 4.933
-Epoch:  23/200 Iteration:    30/12000 Tran_loss: 4.958
-Epoch:  23/200 Iteration:    60/12000 Tran_loss: 4.830
-Epoch:  24/200 Iteration:    30/12000 Tran_loss: 4.861
-Epoch:  24/200 Iteration:    60/12000 Tran_loss: 4.752
-Epoch:  25/200 Iteration:    30/12000 Tran_loss: 4.783
-Epoch:  25/200 Iteration:    60/12000 Tran_loss: 4.689
-Epoch:  26/200 Iteration:    30/12000 Tran_loss: 4.727
-Epoch:  26/200 Iteration:    60/12000 Tran_loss: 4.635
-Epoch:  27/200 Iteration:    30/12000 Tran_loss: 4.656
-Epoch:  27/200 Iteration:    60/12000 Tran_loss: 4.570
-Epoch:  28/200 Iteration:    30/12000 Tran_loss: 4.593
-Epoch:  28/200 Iteration:    60/12000 Tran_loss: 4.514
-Epoch:  29/200 Iteration:    30/12000 Tran_loss: 4.542
-Epoch:  29/200 Iteration:    60/12000 Tran_loss: 4.461
-Epoch:  30/200 Iteration:    30/12000 Tran_loss: 4.482
-Epoch:  30/200 Iteration:    60/12000 Tran_loss: 4.420
-Epoch:  31/200 Iteration:    30/12000 Tran_loss: 4.429
-Epoch:  31/200 Iteration:    60/12000 Tran_loss: 4.371
-Epoch:  32/200 Iteration:    30/12000 Tran_loss: 4.369
-Epoch:  32/200 Iteration:    60/12000 Tran_loss: 4.359
-Epoch:  33/200 Iteration:    30/12000 Tran_loss: 4.340
-Epoch:  33/200 Iteration:    60/12000 Tran_loss: 4.314
-Epoch:  34/200 Iteration:    30/12000 Tran_loss: 4.249
-Epoch:  34/200 Iteration:    60/12000 Tran_loss: 4.233
-Epoch:  35/200 Iteration:    30/12000 Tran_loss: 4.212
-Epoch:  35/200 Iteration:    60/12000 Tran_loss: 4.187
-Epoch:  36/200 Iteration:    30/12000 Tran_loss: 4.160
-Epoch:  36/200 Iteration:    60/12000 Tran_loss: 4.145
-Epoch:  37/200 Iteration:    30/12000 Tran_loss: 4.114
-Epoch:  37/200 Iteration:    60/12000 Tran_loss: 4.101
-Epoch:  38/200 Iteration:    30/12000 Tran_loss: 4.037
-Epoch:  38/200 Iteration:    60/12000 Tran_loss: 4.051
-Epoch:  39/200 Iteration:    30/12000 Tran_loss: 3.981
-Epoch:  39/200 Iteration:    60/12000 Tran_loss: 4.019
-Epoch:  40/200 Iteration:    30/12000 Tran_loss: 3.937
-Epoch:  40/200 Iteration:    60/12000 Tran_loss: 3.958
-Epoch:  41/200 Iteration:    30/12000 Tran_loss: 3.881
-Epoch:  41/200 Iteration:    60/12000 Tran_loss: 3.933
-Epoch:  42/200 Iteration:    30/12000 Tran_loss: 3.822
-Epoch:  42/200 Iteration:    60/12000 Tran_loss: 3.923
-Epoch:  43/200 Iteration:    30/12000 Tran_loss: 3.786
-Epoch:  43/200 Iteration:    60/12000 Tran_loss: 3.886
-Epoch:  44/200 Iteration:    30/12000 Tran_loss: 3.741
-Epoch:  44/200 Iteration:    60/12000 Tran_loss: 3.790
-Epoch:  45/200 Iteration:    30/12000 Tran_loss: 3.687
-Epoch:  45/200 Iteration:    60/12000 Tran_loss: 3.750
-Epoch:  46/200 Iteration:    30/12000 Tran_loss: 3.617
-Epoch:  46/200 Iteration:    60/12000 Tran_loss: 3.671
-Epoch:  47/200 Iteration:    30/12000 Tran_loss: 3.540
-Epoch:  47/200 Iteration:    60/12000 Tran_loss: 3.609
-Epoch:  48/200 Iteration:    30/12000 Tran_loss: 3.483
-Epoch:  48/200 Iteration:    60/12000 Tran_loss: 3.564
-Epoch:  49/200 Iteration:    30/12000 Tran_loss: 3.427
-Epoch:  49/200 Iteration:    60/12000 Tran_loss: 3.547
-Epoch:  50/200 Iteration:    30/12000 Tran_loss: 3.402
-Epoch:  50/200 Iteration:    60/12000 Tran_loss: 3.471
-Epoch:  51/200 Iteration:    30/12000 Tran_loss: 3.343
-Epoch:  51/200 Iteration:    60/12000 Tran_loss: 3.424
-Epoch:  52/200 Iteration:    30/12000 Tran_loss: 3.300
-Epoch:  52/200 Iteration:    60/12000 Tran_loss: 3.381
-Epoch:  53/200 Iteration:    30/12000 Tran_loss: 3.209
-Epoch:  53/200 Iteration:    60/12000 Tran_loss: 3.275
-Epoch:  54/200 Iteration:    30/12000 Tran_loss: 3.138
-Epoch:  54/200 Iteration:    60/12000 Tran_loss: 3.202
-Epoch:  55/200 Iteration:    30/12000 Tran_loss: 3.058
-Epoch:  55/200 Iteration:    60/12000 Tran_loss: 3.152
-Epoch:  56/200 Iteration:    30/12000 Tran_loss: 3.012
-Epoch:  56/200 Iteration:    60/12000 Tran_loss: 3.097
-Epoch:  57/200 Iteration:    30/12000 Tran_loss: 2.930
-Epoch:  57/200 Iteration:    60/12000 Tran_loss: 3.069
-Epoch:  58/200 Iteration:    30/12000 Tran_loss: 2.893
-Epoch:  58/200 Iteration:    60/12000 Tran_loss: 2.995
-Epoch:  59/200 Iteration:    30/12000 Tran_loss: 2.836
-Epoch:  59/200 Iteration:    60/12000 Tran_loss: 2.980
-Epoch:  60/200 Iteration:    30/12000 Tran_loss: 2.820
-Epoch:  60/200 Iteration:    60/12000 Tran_loss: 2.883
-Epoch:  61/200 Iteration:    30/12000 Tran_loss: 2.781
-Epoch:  61/200 Iteration:    60/12000 Tran_loss: 2.817
-Epoch:  62/200 Iteration:    30/12000 Tran_loss: 2.703
-Epoch:  62/200 Iteration:    60/12000 Tran_loss: 2.772
-Epoch:  63/200 Iteration:    30/12000 Tran_loss: 2.627
-Epoch:  63/200 Iteration:    60/12000 Tran_loss: 2.698
-Epoch:  64/200 Iteration:    30/12000 Tran_loss: 2.553
-Epoch:  64/200 Iteration:    60/12000 Tran_loss: 2.653
-Epoch:  65/200 Iteration:    30/12000 Tran_loss: 2.486
-Epoch:  65/200 Iteration:    60/12000 Tran_loss: 2.593
-Epoch:  66/200 Iteration:    30/12000 Tran_loss: 2.415
-Epoch:  66/200 Iteration:    60/12000 Tran_loss: 2.531
-Epoch:  67/200 Iteration:    30/12000 Tran_loss: 2.373
-Epoch:  67/200 Iteration:    60/12000 Tran_loss: 2.473
-Epoch:  68/200 Iteration:    30/12000 Tran_loss: 2.315
-Epoch:  68/200 Iteration:    60/12000 Tran_loss: 2.428
-Epoch:  69/200 Iteration:    30/12000 Tran_loss: 2.248
-Epoch:  69/200 Iteration:    60/12000 Tran_loss: 2.381
-Epoch:  70/200 Iteration:    30/12000 Tran_loss: 2.225
-Epoch:  70/200 Iteration:    60/12000 Tran_loss: 2.336
-Epoch:  71/200 Iteration:    30/12000 Tran_loss: 2.186
-Epoch:  71/200 Iteration:    60/12000 Tran_loss: 2.333
-Epoch:  72/200 Iteration:    30/12000 Tran_loss: 2.152
-Epoch:  72/200 Iteration:    60/12000 Tran_loss: 2.248
-Epoch:  73/200 Iteration:    30/12000 Tran_loss: 2.143
-Epoch:  73/200 Iteration:    60/12000 Tran_loss: 2.179
-Epoch:  74/200 Iteration:    30/12000 Tran_loss: 2.068
-Epoch:  74/200 Iteration:    60/12000 Tran_loss: 2.143
-Epoch:  75/200 Iteration:    30/12000 Tran_loss: 1.991
-Epoch:  75/200 Iteration:    60/12000 Tran_loss: 2.095
-Epoch:  76/200 Iteration:    30/12000 Tran_loss: 1.949
-Epoch:  76/200 Iteration:    60/12000 Tran_loss: 2.069
-Epoch:  77/200 Iteration:    30/12000 Tran_loss: 1.927
-Epoch:  77/200 Iteration:    60/12000 Tran_loss: 2.010
-Epoch:  78/200 Iteration:    30/12000 Tran_loss: 1.896
-Epoch:  78/200 Iteration:    60/12000 Tran_loss: 1.958
-Epoch:  79/200 Iteration:    30/12000 Tran_loss: 1.818
-Epoch:  79/200 Iteration:    60/12000 Tran_loss: 1.922
-Epoch:  80/200 Iteration:    30/12000 Tran_loss: 1.776
-Epoch:  80/200 Iteration:    60/12000 Tran_loss: 1.880
-Epoch:  81/200 Iteration:    30/12000 Tran_loss: 1.726
-Epoch:  81/200 Iteration:    60/12000 Tran_loss: 1.864
-Epoch:  82/200 Iteration:    30/12000 Tran_loss: 1.730
-Epoch:  82/200 Iteration:    60/12000 Tran_loss: 1.833
-Epoch:  83/200 Iteration:    30/12000 Tran_loss: 1.700
-Epoch:  83/200 Iteration:    60/12000 Tran_loss: 1.814
-Epoch:  84/200 Iteration:    30/12000 Tran_loss: 1.666
-Epoch:  84/200 Iteration:    60/12000 Tran_loss: 1.805
-Epoch:  85/200 Iteration:    30/12000 Tran_loss: 1.608
-Epoch:  85/200 Iteration:    60/12000 Tran_loss: 1.763
-Epoch:  86/200 Iteration:    30/12000 Tran_loss: 1.621
-Epoch:  86/200 Iteration:    60/12000 Tran_loss: 1.774
-Epoch:  87/200 Iteration:    30/12000 Tran_loss: 1.598
-Epoch:  87/200 Iteration:    60/12000 Tran_loss: 1.783
-Epoch:  88/200 Iteration:    30/12000 Tran_loss: 1.562
-Epoch:  88/200 Iteration:    60/12000 Tran_loss: 1.730
-Epoch:  89/200 Iteration:    30/12000 Tran_loss: 1.555
-Epoch:  89/200 Iteration:    60/12000 Tran_loss: 1.656
-Epoch:  90/200 Iteration:    30/12000 Tran_loss: 1.497
-Epoch:  90/200 Iteration:    60/12000 Tran_loss: 1.612
-Epoch:  91/200 Iteration:    30/12000 Tran_loss: 1.433
-Epoch:  91/200 Iteration:    60/12000 Tran_loss: 1.540
-Epoch:  92/200 Iteration:    30/12000 Tran_loss: 1.391
-Epoch:  92/200 Iteration:    60/12000 Tran_loss: 1.493
-Epoch:  93/200 Iteration:    30/12000 Tran_loss: 1.343
-Epoch:  93/200 Iteration:    60/12000 Tran_loss: 1.450
-Epoch:  94/200 Iteration:    30/12000 Tran_loss: 1.314
-Epoch:  94/200 Iteration:    60/12000 Tran_loss: 1.435
-Epoch:  95/200 Iteration:    30/12000 Tran_loss: 1.293
-Epoch:  95/200 Iteration:    60/12000 Tran_loss: 1.381
-Epoch:  96/200 Iteration:    30/12000 Tran_loss: 1.244
-Epoch:  96/200 Iteration:    60/12000 Tran_loss: 1.333
-Epoch:  97/200 Iteration:    30/12000 Tran_loss: 1.193
-Epoch:  97/200 Iteration:    60/12000 Tran_loss: 1.306
-Epoch:  98/200 Iteration:    30/12000 Tran_loss: 1.162
-Epoch:  98/200 Iteration:    60/12000 Tran_loss: 1.268
-Epoch:  99/200 Iteration:    30/12000 Tran_loss: 1.150
-Epoch:  99/200 Iteration:    60/12000 Tran_loss: 1.211
-Epoch: 100/200 Iteration:    30/12000 Tran_loss: 1.148
-Epoch: 100/200 Iteration:    60/12000 Tran_loss: 1.162
-Epoch: 101/200 Iteration:    30/12000 Tran_loss: 1.122
-Epoch: 101/200 Iteration:    60/12000 Tran_loss: 1.167
-Epoch: 102/200 Iteration:    30/12000 Tran_loss: 1.098
-Epoch: 102/200 Iteration:    60/12000 Tran_loss: 1.156
-Epoch: 103/200 Iteration:    30/12000 Tran_loss: 1.060
-Epoch: 103/200 Iteration:    60/12000 Tran_loss: 1.113
-Epoch: 104/200 Iteration:    30/12000 Tran_loss: 1.040
-Epoch: 104/200 Iteration:    60/12000 Tran_loss: 1.104
-Epoch: 105/200 Iteration:    30/12000 Tran_loss: 1.026
-Epoch: 105/200 Iteration:    60/12000 Tran_loss: 1.047
-Epoch: 106/200 Iteration:    30/12000 Tran_loss: 1.016
-Epoch: 106/200 Iteration:    60/12000 Tran_loss: 1.024
-Epoch: 107/200 Iteration:    30/12000 Tran_loss: 0.982
-Epoch: 107/200 Iteration:    60/12000 Tran_loss: 0.983
-Epoch: 108/200 Iteration:    30/12000 Tran_loss: 0.938
-Epoch: 108/200 Iteration:    60/12000 Tran_loss: 0.994
-Epoch: 109/200 Iteration:    30/12000 Tran_loss: 0.932
-Epoch: 109/200 Iteration:    60/12000 Tran_loss: 0.965
-Epoch: 110/200 Iteration:    30/12000 Tran_loss: 0.927
-Epoch: 110/200 Iteration:    60/12000 Tran_loss: 0.933
-Epoch: 111/200 Iteration:    30/12000 Tran_loss: 0.918
-Epoch: 111/200 Iteration:    60/12000 Tran_loss: 0.897
-Epoch: 112/200 Iteration:    30/12000 Tran_loss: 0.856
-Epoch: 112/200 Iteration:    60/12000 Tran_loss: 0.865
-Epoch: 113/200 Iteration:    30/12000 Tran_loss: 0.827
-Epoch: 113/200 Iteration:    60/12000 Tran_loss: 0.821
-Epoch: 114/200 Iteration:    30/12000 Tran_loss: 0.775
-Epoch: 114/200 Iteration:    60/12000 Tran_loss: 0.789
-Epoch: 115/200 Iteration:    30/12000 Tran_loss: 0.725
-Epoch: 115/200 Iteration:    60/12000 Tran_loss: 0.751
-Epoch: 116/200 Iteration:    30/12000 Tran_loss: 0.696
-Epoch: 116/200 Iteration:    60/12000 Tran_loss: 0.713
-Epoch: 117/200 Iteration:    30/12000 Tran_loss: 0.677
-Epoch: 117/200 Iteration:    60/12000 Tran_loss: 0.702
-Epoch: 118/200 Iteration:    30/12000 Tran_loss: 0.644
-Epoch: 118/200 Iteration:    60/12000 Tran_loss: 0.692
-Epoch: 119/200 Iteration:    30/12000 Tran_loss: 0.614
-Epoch: 119/200 Iteration:    60/12000 Tran_loss: 0.669
-Epoch: 120/200 Iteration:    30/12000 Tran_loss: 0.608
-Epoch: 120/200 Iteration:    60/12000 Tran_loss: 0.618
-Epoch: 121/200 Iteration:    30/12000 Tran_loss: 0.630
-Epoch: 121/200 Iteration:    60/12000 Tran_loss: 0.602
-Epoch: 122/200 Iteration:    30/12000 Tran_loss: 0.602
-Epoch: 122/200 Iteration:    60/12000 Tran_loss: 0.583
-Epoch: 123/200 Iteration:    30/12000 Tran_loss: 0.545
-Epoch: 123/200 Iteration:    60/12000 Tran_loss: 0.599
-Epoch: 124/200 Iteration:    30/12000 Tran_loss: 0.524
-Epoch: 124/200 Iteration:    60/12000 Tran_loss: 0.562
-Epoch: 125/200 Iteration:    30/12000 Tran_loss: 0.515
-Epoch: 125/200 Iteration:    60/12000 Tran_loss: 0.554
-Epoch: 126/200 Iteration:    30/12000 Tran_loss: 0.502
-Epoch: 126/200 Iteration:    60/12000 Tran_loss: 0.536
-Epoch: 127/200 Iteration:    30/12000 Tran_loss: 0.486
-Epoch: 127/200 Iteration:    60/12000 Tran_loss: 0.537
-Epoch: 128/200 Iteration:    30/12000 Tran_loss: 0.470
-Epoch: 128/200 Iteration:    60/12000 Tran_loss: 0.547
-Epoch: 129/200 Iteration:    30/12000 Tran_loss: 0.451
-Epoch: 129/200 Iteration:    60/12000 Tran_loss: 0.495
-Epoch: 130/200 Iteration:    30/12000 Tran_loss: 0.468
-Epoch: 130/200 Iteration:    60/12000 Tran_loss: 0.466
-Epoch: 131/200 Iteration:    30/12000 Tran_loss: 0.458
-Epoch: 131/200 Iteration:    60/12000 Tran_loss: 0.459
-Epoch: 132/200 Iteration:    30/12000 Tran_loss: 0.416
-Epoch: 132/200 Iteration:    60/12000 Tran_loss: 0.436
-Epoch: 133/200 Iteration:    30/12000 Tran_loss: 0.376
-Epoch: 133/200 Iteration:    60/12000 Tran_loss: 0.427
-Epoch: 134/200 Iteration:    30/12000 Tran_loss: 0.362
-Epoch: 134/200 Iteration:    60/12000 Tran_loss: 0.421
-Epoch: 135/200 Iteration:    30/12000 Tran_loss: 0.379
-Epoch: 135/200 Iteration:    60/12000 Tran_loss: 0.399
-Epoch: 136/200 Iteration:    30/12000 Tran_loss: 0.348
-Epoch: 136/200 Iteration:    60/12000 Tran_loss: 0.378
-Epoch: 137/200 Iteration:    30/12000 Tran_loss: 0.317
-Epoch: 137/200 Iteration:    60/12000 Tran_loss: 0.382
-Epoch: 138/200 Iteration:    30/12000 Tran_loss: 0.308
-Epoch: 138/200 Iteration:    60/12000 Tran_loss: 0.355
-Epoch: 139/200 Iteration:    30/12000 Tran_loss: 0.302
-Epoch: 139/200 Iteration:    60/12000 Tran_loss: 0.336
-Epoch: 140/200 Iteration:    30/12000 Tran_loss: 0.332
-Epoch: 140/200 Iteration:    60/12000 Tran_loss: 0.321
-Epoch: 141/200 Iteration:    30/12000 Tran_loss: 0.317
-Epoch: 141/200 Iteration:    60/12000 Tran_loss: 0.322
-Epoch: 142/200 Iteration:    30/12000 Tran_loss: 0.292
-Epoch: 142/200 Iteration:    60/12000 Tran_loss: 0.330
-Epoch: 143/200 Iteration:    30/12000 Tran_loss: 0.285
-Epoch: 143/200 Iteration:    60/12000 Tran_loss: 0.285
-Epoch: 144/200 Iteration:    30/12000 Tran_loss: 0.288
-Epoch: 144/200 Iteration:    60/12000 Tran_loss: 0.268
-Epoch: 145/200 Iteration:    30/12000 Tran_loss: 0.252
-Epoch: 145/200 Iteration:    60/12000 Tran_loss: 0.260
-Epoch: 146/200 Iteration:    30/12000 Tran_loss: 0.233
-Epoch: 146/200 Iteration:    60/12000 Tran_loss: 0.252
-Epoch: 147/200 Iteration:    30/12000 Tran_loss: 0.226
-Epoch: 147/200 Iteration:    60/12000 Tran_loss: 0.275
-Epoch: 148/200 Iteration:    30/12000 Tran_loss: 0.231
-Epoch: 148/200 Iteration:    60/12000 Tran_loss: 0.265
-Epoch: 149/200 Iteration:    30/12000 Tran_loss: 0.210
-Epoch: 149/200 Iteration:    60/12000 Tran_loss: 0.241
-Epoch: 150/200 Iteration:    30/12000 Tran_loss: 0.204
-Epoch: 150/200 Iteration:    60/12000 Tran_loss: 0.247
-Epoch: 151/200 Iteration:    30/12000 Tran_loss: 0.197
-Epoch: 151/200 Iteration:    60/12000 Tran_loss: 0.229
-Epoch: 152/200 Iteration:    30/12000 Tran_loss: 0.170
-Epoch: 152/200 Iteration:    60/12000 Tran_loss: 0.197
-Epoch: 153/200 Iteration:    30/12000 Tran_loss: 0.201
-Epoch: 153/200 Iteration:    60/12000 Tran_loss: 0.183
-Epoch: 154/200 Iteration:    30/12000 Tran_loss: 0.186
-Epoch: 154/200 Iteration:    60/12000 Tran_loss: 0.179
-Epoch: 155/200 Iteration:    30/12000 Tran_loss: 0.159
-Epoch: 155/200 Iteration:    60/12000 Tran_loss: 0.192
-Epoch: 156/200 Iteration:    30/12000 Tran_loss: 0.146
-Epoch: 156/200 Iteration:    60/12000 Tran_loss: 0.175
-Epoch: 157/200 Iteration:    30/12000 Tran_loss: 0.148
-Epoch: 157/200 Iteration:    60/12000 Tran_loss: 0.157
-Epoch: 158/200 Iteration:    30/12000 Tran_loss: 0.140
-Epoch: 158/200 Iteration:    60/12000 Tran_loss: 0.149
-Epoch: 159/200 Iteration:    30/12000 Tran_loss: 0.131
-Epoch: 159/200 Iteration:    60/12000 Tran_loss: 0.138
-Epoch: 160/200 Iteration:    30/12000 Tran_loss: 0.123
-Epoch: 160/200 Iteration:    60/12000 Tran_loss: 0.131
-Epoch: 161/200 Iteration:    30/12000 Tran_loss: 0.117
-Epoch: 161/200 Iteration:    60/12000 Tran_loss: 0.128
-Epoch: 162/200 Iteration:    30/12000 Tran_loss: 0.108
-Epoch: 162/200 Iteration:    60/12000 Tran_loss: 0.123
-Epoch: 163/200 Iteration:    30/12000 Tran_loss: 0.103
-Epoch: 163/200 Iteration:    60/12000 Tran_loss: 0.123
-Epoch: 164/200 Iteration:    30/12000 Tran_loss: 0.097
-Epoch: 164/200 Iteration:    60/12000 Tran_loss: 0.122
-Epoch: 165/200 Iteration:    30/12000 Tran_loss: 0.100
-Epoch: 165/200 Iteration:    60/12000 Tran_loss: 0.113
-Epoch: 166/200 Iteration:    30/12000 Tran_loss: 0.094
-Epoch: 166/200 Iteration:    60/12000 Tran_loss: 0.103
-Epoch: 167/200 Iteration:    30/12000 Tran_loss: 0.096
-Epoch: 167/200 Iteration:    60/12000 Tran_loss: 0.099
-Epoch: 168/200 Iteration:    30/12000 Tran_loss: 0.095
-Epoch: 168/200 Iteration:    60/12000 Tran_loss: 0.091
-Epoch: 169/200 Iteration:    30/12000 Tran_loss: 0.083
-Epoch: 169/200 Iteration:    60/12000 Tran_loss: 0.091
-Epoch: 170/200 Iteration:    30/12000 Tran_loss: 0.078
-Epoch: 170/200 Iteration:    60/12000 Tran_loss: 0.093
-Epoch: 171/200 Iteration:    30/12000 Tran_loss: 0.075
-Epoch: 171/200 Iteration:    60/12000 Tran_loss: 0.087
-Epoch: 172/200 Iteration:    30/12000 Tran_loss: 0.075
-Epoch: 172/200 Iteration:    60/12000 Tran_loss: 0.082
-Epoch: 173/200 Iteration:    30/12000 Tran_loss: 0.072
-Epoch: 173/200 Iteration:    60/12000 Tran_loss: 0.074
-Epoch: 174/200 Iteration:    30/12000 Tran_loss: 0.064
-Epoch: 174/200 Iteration:    60/12000 Tran_loss: 0.079
-Epoch: 175/200 Iteration:    30/12000 Tran_loss: 0.064
-Epoch: 175/200 Iteration:    60/12000 Tran_loss: 0.075
-Epoch: 176/200 Iteration:    30/12000 Tran_loss: 0.061
-Epoch: 176/200 Iteration:    60/12000 Tran_loss: 0.071
-Epoch: 177/200 Iteration:    30/12000 Tran_loss: 0.060
-Epoch: 177/200 Iteration:    60/12000 Tran_loss: 0.066
-Epoch: 178/200 Iteration:    30/12000 Tran_loss: 0.062
-Epoch: 178/200 Iteration:    60/12000 Tran_loss: 0.062
-Epoch: 179/200 Iteration:    30/12000 Tran_loss: 0.059
-Epoch: 179/200 Iteration:    60/12000 Tran_loss: 0.059
-Epoch: 180/200 Iteration:    30/12000 Tran_loss: 0.056
-Epoch: 180/200 Iteration:    60/12000 Tran_loss: 0.055
-Epoch: 181/200 Iteration:    30/12000 Tran_loss: 0.056
-Epoch: 181/200 Iteration:    60/12000 Tran_loss: 0.056
-Epoch: 182/200 Iteration:    30/12000 Tran_loss: 0.052
-Epoch: 182/200 Iteration:    60/12000 Tran_loss: 0.056
-Epoch: 183/200 Iteration:    30/12000 Tran_loss: 0.048
-Epoch: 183/200 Iteration:    60/12000 Tran_loss: 0.050
-Epoch: 184/200 Iteration:    30/12000 Tran_loss: 0.043
-Epoch: 184/200 Iteration:    60/12000 Tran_loss: 0.047
-Epoch: 185/200 Iteration:    30/12000 Tran_loss: 0.042
-Epoch: 185/200 Iteration:    60/12000 Tran_loss: 0.045
-Epoch: 186/200 Iteration:    30/12000 Tran_loss: 0.040
-Epoch: 186/200 Iteration:    60/12000 Tran_loss: 0.043
-Epoch: 187/200 Iteration:    30/12000 Tran_loss: 0.039
-Epoch: 187/200 Iteration:    60/12000 Tran_loss: 0.044
-Epoch: 188/200 Iteration:    30/12000 Tran_loss: 0.039
-Epoch: 188/200 Iteration:    60/12000 Tran_loss: 0.042
-Epoch: 189/200 Iteration:    30/12000 Tran_loss: 0.041
-Epoch: 189/200 Iteration:    60/12000 Tran_loss: 0.040
-Epoch: 190/200 Iteration:    30/12000 Tran_loss: 0.046
-Epoch: 190/200 Iteration:    60/12000 Tran_loss: 0.037
-Epoch: 191/200 Iteration:    30/12000 Tran_loss: 0.037
-Epoch: 191/200 Iteration:    60/12000 Tran_loss: 0.036
-Epoch: 192/200 Iteration:    30/12000 Tran_loss: 0.037
-Epoch: 192/200 Iteration:    60/12000 Tran_loss: 0.035
-Epoch: 193/200 Iteration:    30/12000 Tran_loss: 0.036
-Epoch: 193/200 Iteration:    60/12000 Tran_loss: 0.035
-Epoch: 194/200 Iteration:    30/12000 Tran_loss: 0.033
-Epoch: 194/200 Iteration:    60/12000 Tran_loss: 0.035
-Epoch: 195/200 Iteration:    30/12000 Tran_loss: 0.032
-Epoch: 195/200 Iteration:    60/12000 Tran_loss: 0.035
-Epoch: 196/200 Iteration:    30/12000 Tran_loss: 0.030
-Epoch: 196/200 Iteration:    60/12000 Tran_loss: 0.034
-Epoch: 197/200 Iteration:    30/12000 Tran_loss: 0.029
-Epoch: 197/200 Iteration:    60/12000 Tran_loss: 0.032
-Epoch: 198/200 Iteration:    30/12000 Tran_loss: 0.029
-Epoch: 198/200 Iteration:    60/12000 Tran_loss: 0.030
-Epoch: 199/200 Iteration:    30/12000 Tran_loss: 0.028
-Epoch: 199/200 Iteration:    60/12000 Tran_loss: 0.029
-Epoch: 200/200 Iteration:    30/12000 Tran_loss: 0.027
-Epoch: 200/200 Iteration:    60/12000 Tran_loss: 0.028
+<pre>Epoch:   1/200 Iteration:    11/4400 Tran_loss: 6.563
+Epoch:   1/200 Iteration:    22/4400 Tran_loss: 6.604
+Epoch:   2/200 Iteration:    33/4400 Tran_loss: 6.051
+Epoch:   2/200 Iteration:    44/4400 Tran_loss: 6.224
+Epoch:   3/200 Iteration:    55/4400 Tran_loss: 6.021
+Epoch:   3/200 Iteration:    66/4400 Tran_loss: 6.114
+Epoch:   4/200 Iteration:    77/4400 Tran_loss: 5.987
+Epoch:   4/200 Iteration:    88/4400 Tran_loss: 6.115
+Epoch:   5/200 Iteration:    99/4400 Tran_loss: 5.971
+Epoch:   5/200 Iteration:   110/4400 Tran_loss: 6.093
+Epoch:   6/200 Iteration:   121/4400 Tran_loss: 5.963
+Epoch:   6/200 Iteration:   132/4400 Tran_loss: 6.081
+Epoch:   7/200 Iteration:   143/4400 Tran_loss: 5.956
+Epoch:   7/200 Iteration:   154/4400 Tran_loss: 6.072
+Epoch:   8/200 Iteration:   165/4400 Tran_loss: 5.952
+Epoch:   8/200 Iteration:   176/4400 Tran_loss: 6.063
+Epoch:   9/200 Iteration:   187/4400 Tran_loss: 5.945
+Epoch:   9/200 Iteration:   198/4400 Tran_loss: 6.049
+Epoch:  10/200 Iteration:   209/4400 Tran_loss: 5.942
+Epoch:  10/200 Iteration:   220/4400 Tran_loss: 6.041
+Epoch:  11/200 Iteration:   231/4400 Tran_loss: 5.937
+Epoch:  11/200 Iteration:   242/4400 Tran_loss: 6.035
+Epoch:  12/200 Iteration:   253/4400 Tran_loss: 5.933
+Epoch:  12/200 Iteration:   264/4400 Tran_loss: 6.031
+Epoch:  13/200 Iteration:   275/4400 Tran_loss: 5.929
+Epoch:  13/200 Iteration:   286/4400 Tran_loss: 6.027
+Epoch:  14/200 Iteration:   297/4400 Tran_loss: 5.923
+Epoch:  14/200 Iteration:   308/4400 Tran_loss: 6.023
+Epoch:  15/200 Iteration:   319/4400 Tran_loss: 5.919
+Epoch:  15/200 Iteration:   330/4400 Tran_loss: 6.017
+Epoch:  16/200 Iteration:   341/4400 Tran_loss: 5.913
+Epoch:  16/200 Iteration:   352/4400 Tran_loss: 6.012
+Epoch:  17/200 Iteration:   363/4400 Tran_loss: 5.908
+Epoch:  17/200 Iteration:   374/4400 Tran_loss: 6.004
+Epoch:  18/200 Iteration:   385/4400 Tran_loss: 5.900
+Epoch:  18/200 Iteration:   396/4400 Tran_loss: 5.996
+Epoch:  19/200 Iteration:   407/4400 Tran_loss: 5.892
+Epoch:  19/200 Iteration:   418/4400 Tran_loss: 5.986
+Epoch:  20/200 Iteration:   429/4400 Tran_loss: 5.880
+Epoch:  20/200 Iteration:   440/4400 Tran_loss: 5.972
+Epoch:  21/200 Iteration:   451/4400 Tran_loss: 5.843
+Epoch:  21/200 Iteration:   462/4400 Tran_loss: 5.867
+Epoch:  22/200 Iteration:   473/4400 Tran_loss: 5.702
+Epoch:  22/200 Iteration:   484/4400 Tran_loss: 5.724
+Epoch:  23/200 Iteration:   495/4400 Tran_loss: 5.550
+Epoch:  23/200 Iteration:   506/4400 Tran_loss: 5.563
+Epoch:  24/200 Iteration:   517/4400 Tran_loss: 5.411
+Epoch:  24/200 Iteration:   528/4400 Tran_loss: 5.443
+Epoch:  25/200 Iteration:   539/4400 Tran_loss: 5.308
+Epoch:  25/200 Iteration:   550/4400 Tran_loss: 5.349
+Epoch:  26/200 Iteration:   561/4400 Tran_loss: 5.216
+Epoch:  26/200 Iteration:   572/4400 Tran_loss: 5.252
+Epoch:  27/200 Iteration:   583/4400 Tran_loss: 5.132
+Epoch:  27/200 Iteration:   594/4400 Tran_loss: 5.169
+Epoch:  28/200 Iteration:   605/4400 Tran_loss: 5.057
+Epoch:  28/200 Iteration:   616/4400 Tran_loss: 5.106
+Epoch:  29/200 Iteration:   627/4400 Tran_loss: 5.001
+Epoch:  29/200 Iteration:   638/4400 Tran_loss: 5.023
+Epoch:  30/200 Iteration:   649/4400 Tran_loss: 4.948
+Epoch:  30/200 Iteration:   660/4400 Tran_loss: 4.964
+Epoch:  31/200 Iteration:   671/4400 Tran_loss: 4.873
+Epoch:  31/200 Iteration:   682/4400 Tran_loss: 4.896
+Epoch:  32/200 Iteration:   693/4400 Tran_loss: 4.817
+Epoch:  32/200 Iteration:   704/4400 Tran_loss: 4.854
+Epoch:  33/200 Iteration:   715/4400 Tran_loss: 4.769
+Epoch:  33/200 Iteration:   726/4400 Tran_loss: 4.797
+Epoch:  34/200 Iteration:   737/4400 Tran_loss: 4.727
+Epoch:  34/200 Iteration:   748/4400 Tran_loss: 4.776
+Epoch:  35/200 Iteration:   759/4400 Tran_loss: 4.699
+Epoch:  35/200 Iteration:   770/4400 Tran_loss: 4.709
+Epoch:  36/200 Iteration:   781/4400 Tran_loss: 4.627
+Epoch:  36/200 Iteration:   792/4400 Tran_loss: 4.658
+Epoch:  37/200 Iteration:   803/4400 Tran_loss: 4.578
+Epoch:  37/200 Iteration:   814/4400 Tran_loss: 4.585
+Epoch:  38/200 Iteration:   825/4400 Tran_loss: 4.522
+Epoch:  38/200 Iteration:   836/4400 Tran_loss: 4.568
+Epoch:  39/200 Iteration:   847/4400 Tran_loss: 4.508
+Epoch:  39/200 Iteration:   858/4400 Tran_loss: 4.506
+Epoch:  40/200 Iteration:   869/4400 Tran_loss: 4.471
+Epoch:  40/200 Iteration:   880/4400 Tran_loss: 4.469
+Epoch:  41/200 Iteration:   891/4400 Tran_loss: 4.420
+Epoch:  41/200 Iteration:   902/4400 Tran_loss: 4.454
+Epoch:  42/200 Iteration:   913/4400 Tran_loss: 4.362
+Epoch:  42/200 Iteration:   924/4400 Tran_loss: 4.404
+Epoch:  43/200 Iteration:   935/4400 Tran_loss: 4.341
+Epoch:  43/200 Iteration:   946/4400 Tran_loss: 4.326
+Epoch:  44/200 Iteration:   957/4400 Tran_loss: 4.306
+Epoch:  44/200 Iteration:   968/4400 Tran_loss: 4.281
+Epoch:  45/200 Iteration:   979/4400 Tran_loss: 4.248
+Epoch:  45/200 Iteration:   990/4400 Tran_loss: 4.277
+Epoch:  46/200 Iteration:  1001/4400 Tran_loss: 4.217
+Epoch:  46/200 Iteration:  1012/4400 Tran_loss: 4.193
+Epoch:  47/200 Iteration:  1023/4400 Tran_loss: 4.197
+Epoch:  47/200 Iteration:  1034/4400 Tran_loss: 4.175
+Epoch:  48/200 Iteration:  1045/4400 Tran_loss: 4.142
+Epoch:  48/200 Iteration:  1056/4400 Tran_loss: 4.165
+Epoch:  49/200 Iteration:  1067/4400 Tran_loss: 4.145
+Epoch:  49/200 Iteration:  1078/4400 Tran_loss: 4.095
+Epoch:  50/200 Iteration:  1089/4400 Tran_loss: 4.100
+Epoch:  50/200 Iteration:  1100/4400 Tran_loss: 4.080
+Epoch:  51/200 Iteration:  1111/4400 Tran_loss: 4.045
+Epoch:  51/200 Iteration:  1122/4400 Tran_loss: 4.023
+Epoch:  52/200 Iteration:  1133/4400 Tran_loss: 4.085
+Epoch:  52/200 Iteration:  1144/4400 Tran_loss: 4.054
+Epoch:  53/200 Iteration:  1155/4400 Tran_loss: 4.015
+Epoch:  53/200 Iteration:  1166/4400 Tran_loss: 3.978
+Epoch:  54/200 Iteration:  1177/4400 Tran_loss: 3.975
+Epoch:  54/200 Iteration:  1188/4400 Tran_loss: 3.951
+Epoch:  55/200 Iteration:  1199/4400 Tran_loss: 3.960
+Epoch:  55/200 Iteration:  1210/4400 Tran_loss: 3.892
+Epoch:  56/200 Iteration:  1221/4400 Tran_loss: 3.902
+Epoch:  56/200 Iteration:  1232/4400 Tran_loss: 3.876
+Epoch:  57/200 Iteration:  1243/4400 Tran_loss: 3.889
+Epoch:  57/200 Iteration:  1254/4400 Tran_loss: 3.856
+Epoch:  58/200 Iteration:  1265/4400 Tran_loss: 3.879
+Epoch:  58/200 Iteration:  1276/4400 Tran_loss: 3.820
+Epoch:  59/200 Iteration:  1287/4400 Tran_loss: 3.842
+Epoch:  59/200 Iteration:  1298/4400 Tran_loss: 3.776
+Epoch:  60/200 Iteration:  1309/4400 Tran_loss: 3.827
+Epoch:  60/200 Iteration:  1320/4400 Tran_loss: 3.797
+Epoch:  61/200 Iteration:  1331/4400 Tran_loss: 3.915
+Epoch:  61/200 Iteration:  1342/4400 Tran_loss: 3.884
+Epoch:  62/200 Iteration:  1353/4400 Tran_loss: 3.811
+Epoch:  62/200 Iteration:  1364/4400 Tran_loss: 3.817
+Epoch:  63/200 Iteration:  1375/4400 Tran_loss: 3.828
+Epoch:  63/200 Iteration:  1386/4400 Tran_loss: 3.692
+Epoch:  64/200 Iteration:  1397/4400 Tran_loss: 3.669
+Epoch:  64/200 Iteration:  1408/4400 Tran_loss: 3.619
+Epoch:  65/200 Iteration:  1419/4400 Tran_loss: 3.627
+Epoch:  65/200 Iteration:  1430/4400 Tran_loss: 3.567
+Epoch:  66/200 Iteration:  1441/4400 Tran_loss: 3.584
+Epoch:  66/200 Iteration:  1452/4400 Tran_loss: 3.520
+Epoch:  67/200 Iteration:  1463/4400 Tran_loss: 3.548
+Epoch:  67/200 Iteration:  1474/4400 Tran_loss: 3.501
+Epoch:  68/200 Iteration:  1485/4400 Tran_loss: 3.518
+Epoch:  68/200 Iteration:  1496/4400 Tran_loss: 3.457
+Epoch:  69/200 Iteration:  1507/4400 Tran_loss: 3.486
+Epoch:  69/200 Iteration:  1518/4400 Tran_loss: 3.445
+Epoch:  70/200 Iteration:  1529/4400 Tran_loss: 3.484
+Epoch:  70/200 Iteration:  1540/4400 Tran_loss: 3.420
+Epoch:  71/200 Iteration:  1551/4400 Tran_loss: 3.468
+Epoch:  71/200 Iteration:  1562/4400 Tran_loss: 3.431
+Epoch:  72/200 Iteration:  1573/4400 Tran_loss: 3.489
+Epoch:  72/200 Iteration:  1584/4400 Tran_loss: 3.381
+Epoch:  73/200 Iteration:  1595/4400 Tran_loss: 3.411
+Epoch:  73/200 Iteration:  1606/4400 Tran_loss: 3.363
+Epoch:  74/200 Iteration:  1617/4400 Tran_loss: 3.405
+Epoch:  74/200 Iteration:  1628/4400 Tran_loss: 3.389
+Epoch:  75/200 Iteration:  1639/4400 Tran_loss: 3.431
+Epoch:  75/200 Iteration:  1650/4400 Tran_loss: 3.310
+Epoch:  76/200 Iteration:  1661/4400 Tran_loss: 3.336
+Epoch:  76/200 Iteration:  1672/4400 Tran_loss: 3.273
+Epoch:  77/200 Iteration:  1683/4400 Tran_loss: 3.349
+Epoch:  77/200 Iteration:  1694/4400 Tran_loss: 3.229
+Epoch:  78/200 Iteration:  1705/4400 Tran_loss: 3.271
+Epoch:  78/200 Iteration:  1716/4400 Tran_loss: 3.217
+Epoch:  79/200 Iteration:  1727/4400 Tran_loss: 3.271
+Epoch:  79/200 Iteration:  1738/4400 Tran_loss: 3.182
+Epoch:  80/200 Iteration:  1749/4400 Tran_loss: 3.221
+Epoch:  80/200 Iteration:  1760/4400 Tran_loss: 3.144
+Epoch:  81/200 Iteration:  1771/4400 Tran_loss: 3.207
+Epoch:  81/200 Iteration:  1782/4400 Tran_loss: 3.107
+Epoch:  82/200 Iteration:  1793/4400 Tran_loss: 3.165
+Epoch:  82/200 Iteration:  1804/4400 Tran_loss: 3.092
+Epoch:  83/200 Iteration:  1815/4400 Tran_loss: 3.137
+Epoch:  83/200 Iteration:  1826/4400 Tran_loss: 3.044
+Epoch:  84/200 Iteration:  1837/4400 Tran_loss: 3.097
+Epoch:  84/200 Iteration:  1848/4400 Tran_loss: 3.023
+Epoch:  85/200 Iteration:  1859/4400 Tran_loss: 3.056
+Epoch:  85/200 Iteration:  1870/4400 Tran_loss: 2.978
+Epoch:  86/200 Iteration:  1881/4400 Tran_loss: 3.053
+Epoch:  86/200 Iteration:  1892/4400 Tran_loss: 2.976
+Epoch:  87/200 Iteration:  1903/4400 Tran_loss: 3.029
+Epoch:  87/200 Iteration:  1914/4400 Tran_loss: 2.927
+Epoch:  88/200 Iteration:  1925/4400 Tran_loss: 2.984
+Epoch:  88/200 Iteration:  1936/4400 Tran_loss: 2.907
+Epoch:  89/200 Iteration:  1947/4400 Tran_loss: 2.985
+Epoch:  89/200 Iteration:  1958/4400 Tran_loss: 2.910
+Epoch:  90/200 Iteration:  1969/4400 Tran_loss: 2.950
+Epoch:  90/200 Iteration:  1980/4400 Tran_loss: 2.861
+Epoch:  91/200 Iteration:  1991/4400 Tran_loss: 2.952
+Epoch:  91/200 Iteration:  2002/4400 Tran_loss: 2.861
+Epoch:  92/200 Iteration:  2013/4400 Tran_loss: 2.957
+Epoch:  92/200 Iteration:  2024/4400 Tran_loss: 2.820
+Epoch:  93/200 Iteration:  2035/4400 Tran_loss: 2.901
+Epoch:  93/200 Iteration:  2046/4400 Tran_loss: 2.810
+Epoch:  94/200 Iteration:  2057/4400 Tran_loss: 2.879
+Epoch:  94/200 Iteration:  2068/4400 Tran_loss: 2.769
+Epoch:  95/200 Iteration:  2079/4400 Tran_loss: 2.871
+Epoch:  95/200 Iteration:  2090/4400 Tran_loss: 2.743
+Epoch:  96/200 Iteration:  2101/4400 Tran_loss: 2.829
+Epoch:  96/200 Iteration:  2112/4400 Tran_loss: 2.727
+Epoch:  97/200 Iteration:  2123/4400 Tran_loss: 2.796
+Epoch:  97/200 Iteration:  2134/4400 Tran_loss: 2.725
+Epoch:  98/200 Iteration:  2145/4400 Tran_loss: 2.802
+Epoch:  98/200 Iteration:  2156/4400 Tran_loss: 2.689
+Epoch:  99/200 Iteration:  2167/4400 Tran_loss: 2.761
+Epoch:  99/200 Iteration:  2178/4400 Tran_loss: 2.664
+Epoch: 100/200 Iteration:  2189/4400 Tran_loss: 2.773
+Epoch: 100/200 Iteration:  2200/4400 Tran_loss: 2.664
+Epoch: 101/200 Iteration:  2211/4400 Tran_loss: 2.737
+Epoch: 101/200 Iteration:  2222/4400 Tran_loss: 2.590
+Epoch: 102/200 Iteration:  2233/4400 Tran_loss: 2.727
+Epoch: 102/200 Iteration:  2244/4400 Tran_loss: 2.580
+Epoch: 103/200 Iteration:  2255/4400 Tran_loss: 2.660
+Epoch: 103/200 Iteration:  2266/4400 Tran_loss: 2.562
+Epoch: 104/200 Iteration:  2277/4400 Tran_loss: 2.627
+Epoch: 104/200 Iteration:  2288/4400 Tran_loss: 2.509
+Epoch: 105/200 Iteration:  2299/4400 Tran_loss: 2.638
+Epoch: 105/200 Iteration:  2310/4400 Tran_loss: 2.528
+Epoch: 106/200 Iteration:  2321/4400 Tran_loss: 2.633
+Epoch: 106/200 Iteration:  2332/4400 Tran_loss: 2.498
+Epoch: 107/200 Iteration:  2343/4400 Tran_loss: 2.598
+Epoch: 107/200 Iteration:  2354/4400 Tran_loss: 2.527
+Epoch: 108/200 Iteration:  2365/4400 Tran_loss: 2.612
+Epoch: 108/200 Iteration:  2376/4400 Tran_loss: 2.508
+Epoch: 109/200 Iteration:  2387/4400 Tran_loss: 2.644
+Epoch: 109/200 Iteration:  2398/4400 Tran_loss: 2.534
+Epoch: 110/200 Iteration:  2409/4400 Tran_loss: 2.604
+Epoch: 110/200 Iteration:  2420/4400 Tran_loss: 2.508
+Epoch: 111/200 Iteration:  2431/4400 Tran_loss: 2.598
+Epoch: 111/200 Iteration:  2442/4400 Tran_loss: 2.499
+Epoch: 112/200 Iteration:  2453/4400 Tran_loss: 2.594
+Epoch: 112/200 Iteration:  2464/4400 Tran_loss: 2.453
+Epoch: 113/200 Iteration:  2475/4400 Tran_loss: 2.536
+Epoch: 113/200 Iteration:  2486/4400 Tran_loss: 2.381
+Epoch: 114/200 Iteration:  2497/4400 Tran_loss: 2.485
+Epoch: 114/200 Iteration:  2508/4400 Tran_loss: 2.383
+Epoch: 115/200 Iteration:  2519/4400 Tran_loss: 2.469
+Epoch: 115/200 Iteration:  2530/4400 Tran_loss: 2.341
+Epoch: 116/200 Iteration:  2541/4400 Tran_loss: 2.388
+Epoch: 116/200 Iteration:  2552/4400 Tran_loss: 2.245
+Epoch: 117/200 Iteration:  2563/4400 Tran_loss: 2.348
+Epoch: 117/200 Iteration:  2574/4400 Tran_loss: 2.229
+Epoch: 118/200 Iteration:  2585/4400 Tran_loss: 2.320
+Epoch: 118/200 Iteration:  2596/4400 Tran_loss: 2.200
+Epoch: 119/200 Iteration:  2607/4400 Tran_loss: 2.286
+Epoch: 119/200 Iteration:  2618/4400 Tran_loss: 2.167
+Epoch: 120/200 Iteration:  2629/4400 Tran_loss: 2.248
+Epoch: 120/200 Iteration:  2640/4400 Tran_loss: 2.122
+Epoch: 121/200 Iteration:  2651/4400 Tran_loss: 2.229
+Epoch: 121/200 Iteration:  2662/4400 Tran_loss: 2.126
+Epoch: 122/200 Iteration:  2673/4400 Tran_loss: 2.204
+Epoch: 122/200 Iteration:  2684/4400 Tran_loss: 2.075
+Epoch: 123/200 Iteration:  2695/4400 Tran_loss: 2.177
+Epoch: 123/200 Iteration:  2706/4400 Tran_loss: 2.118
+Epoch: 124/200 Iteration:  2717/4400 Tran_loss: 2.160
+Epoch: 124/200 Iteration:  2728/4400 Tran_loss: 2.035
+Epoch: 125/200 Iteration:  2739/4400 Tran_loss: 2.134
+Epoch: 125/200 Iteration:  2750/4400 Tran_loss: 2.029
+Epoch: 126/200 Iteration:  2761/4400 Tran_loss: 2.105
+Epoch: 126/200 Iteration:  2772/4400 Tran_loss: 2.013
+Epoch: 127/200 Iteration:  2783/4400 Tran_loss: 2.088
+Epoch: 127/200 Iteration:  2794/4400 Tran_loss: 1.974
+Epoch: 128/200 Iteration:  2805/4400 Tran_loss: 2.077
+Epoch: 128/200 Iteration:  2816/4400 Tran_loss: 1.957
+Epoch: 129/200 Iteration:  2827/4400 Tran_loss: 2.043
+Epoch: 129/200 Iteration:  2838/4400 Tran_loss: 1.940
+Epoch: 130/200 Iteration:  2849/4400 Tran_loss: 2.025
+Epoch: 130/200 Iteration:  2860/4400 Tran_loss: 1.968
+Epoch: 131/200 Iteration:  2871/4400 Tran_loss: 2.016
+Epoch: 131/200 Iteration:  2882/4400 Tran_loss: 1.944
+Epoch: 132/200 Iteration:  2893/4400 Tran_loss: 2.014
+Epoch: 132/200 Iteration:  2904/4400 Tran_loss: 1.912
+Epoch: 133/200 Iteration:  2915/4400 Tran_loss: 2.011
+Epoch: 133/200 Iteration:  2926/4400 Tran_loss: 1.919
+Epoch: 134/200 Iteration:  2937/4400 Tran_loss: 2.026
+Epoch: 134/200 Iteration:  2948/4400 Tran_loss: 1.906
+Epoch: 135/200 Iteration:  2959/4400 Tran_loss: 1.961
+Epoch: 135/200 Iteration:  2970/4400 Tran_loss: 1.921
+Epoch: 136/200 Iteration:  2981/4400 Tran_loss: 1.986
+Epoch: 136/200 Iteration:  2992/4400 Tran_loss: 1.877
+Epoch: 137/200 Iteration:  3003/4400 Tran_loss: 1.958
+Epoch: 137/200 Iteration:  3014/4400 Tran_loss: 1.836
+Epoch: 138/200 Iteration:  3025/4400 Tran_loss: 1.943
+Epoch: 138/200 Iteration:  3036/4400 Tran_loss: 1.832
+Epoch: 139/200 Iteration:  3047/4400 Tran_loss: 1.922
+Epoch: 139/200 Iteration:  3058/4400 Tran_loss: 1.806
+Epoch: 140/200 Iteration:  3069/4400 Tran_loss: 1.880
+Epoch: 140/200 Iteration:  3080/4400 Tran_loss: 1.785
+Epoch: 141/200 Iteration:  3091/4400 Tran_loss: 1.874
+Epoch: 141/200 Iteration:  3102/4400 Tran_loss: 1.747
+Epoch: 142/200 Iteration:  3113/4400 Tran_loss: 1.823
+Epoch: 142/200 Iteration:  3124/4400 Tran_loss: 1.769
+Epoch: 143/200 Iteration:  3135/4400 Tran_loss: 1.881
+Epoch: 143/200 Iteration:  3146/4400 Tran_loss: 1.719
+Epoch: 144/200 Iteration:  3157/4400 Tran_loss: 1.868
+Epoch: 144/200 Iteration:  3168/4400 Tran_loss: 1.750
+Epoch: 145/200 Iteration:  3179/4400 Tran_loss: 1.798
+Epoch: 145/200 Iteration:  3190/4400 Tran_loss: 1.779
+Epoch: 146/200 Iteration:  3201/4400 Tran_loss: 1.824
+Epoch: 146/200 Iteration:  3212/4400 Tran_loss: 1.695
+Epoch: 147/200 Iteration:  3223/4400 Tran_loss: 1.919
+Epoch: 147/200 Iteration:  3234/4400 Tran_loss: 1.789
+Epoch: 148/200 Iteration:  3245/4400 Tran_loss: 1.888
+Epoch: 148/200 Iteration:  3256/4400 Tran_loss: 1.837
+Epoch: 149/200 Iteration:  3267/4400 Tran_loss: 1.920
+Epoch: 149/200 Iteration:  3278/4400 Tran_loss: 1.826
+Epoch: 150/200 Iteration:  3289/4400 Tran_loss: 1.907
+Epoch: 150/200 Iteration:  3300/4400 Tran_loss: 1.849
+Epoch: 151/200 Iteration:  3311/4400 Tran_loss: 1.948
+Epoch: 151/200 Iteration:  3322/4400 Tran_loss: 1.819
+Epoch: 152/200 Iteration:  3333/4400 Tran_loss: 1.941
+Epoch: 152/200 Iteration:  3344/4400 Tran_loss: 1.924
+Epoch: 153/200 Iteration:  3355/4400 Tran_loss: 1.993
+Epoch: 153/200 Iteration:  3366/4400 Tran_loss: 1.816
+Epoch: 154/200 Iteration:  3377/4400 Tran_loss: 1.861
+Epoch: 154/200 Iteration:  3388/4400 Tran_loss: 1.677
+Epoch: 155/200 Iteration:  3399/4400 Tran_loss: 1.774
+Epoch: 155/200 Iteration:  3410/4400 Tran_loss: 1.654
+Epoch: 156/200 Iteration:  3421/4400 Tran_loss: 1.742
+Epoch: 156/200 Iteration:  3432/4400 Tran_loss: 1.666
+Epoch: 157/200 Iteration:  3443/4400 Tran_loss: 1.725
+Epoch: 157/200 Iteration:  3454/4400 Tran_loss: 1.576
+Epoch: 158/200 Iteration:  3465/4400 Tran_loss: 1.671
+Epoch: 158/200 Iteration:  3476/4400 Tran_loss: 1.565
+Epoch: 159/200 Iteration:  3487/4400 Tran_loss: 1.632
+Epoch: 159/200 Iteration:  3498/4400 Tran_loss: 1.551
+Epoch: 160/200 Iteration:  3509/4400 Tran_loss: 1.624
+Epoch: 160/200 Iteration:  3520/4400 Tran_loss: 1.529
+Epoch: 161/200 Iteration:  3531/4400 Tran_loss: 1.662
+Epoch: 161/200 Iteration:  3542/4400 Tran_loss: 1.544
+Epoch: 162/200 Iteration:  3553/4400 Tran_loss: 1.670
+Epoch: 162/200 Iteration:  3564/4400 Tran_loss: 1.581
+Epoch: 163/200 Iteration:  3575/4400 Tran_loss: 1.759
+Epoch: 163/200 Iteration:  3586/4400 Tran_loss: 1.658
+Epoch: 164/200 Iteration:  3597/4400 Tran_loss: 1.797
+Epoch: 164/200 Iteration:  3608/4400 Tran_loss: 1.689
+Epoch: 165/200 Iteration:  3619/4400 Tran_loss: 1.788
+Epoch: 165/200 Iteration:  3630/4400 Tran_loss: 1.632
+Epoch: 166/200 Iteration:  3641/4400 Tran_loss: 1.652
+Epoch: 166/200 Iteration:  3652/4400 Tran_loss: 1.477
+Epoch: 167/200 Iteration:  3663/4400 Tran_loss: 1.531
+Epoch: 167/200 Iteration:  3674/4400 Tran_loss: 1.395
+Epoch: 168/200 Iteration:  3685/4400 Tran_loss: 1.464
+Epoch: 168/200 Iteration:  3696/4400 Tran_loss: 1.346
+Epoch: 169/200 Iteration:  3707/4400 Tran_loss: 1.424
+Epoch: 169/200 Iteration:  3718/4400 Tran_loss: 1.305
+Epoch: 170/200 Iteration:  3729/4400 Tran_loss: 1.398
+Epoch: 170/200 Iteration:  3740/4400 Tran_loss: 1.294
+Epoch: 171/200 Iteration:  3751/4400 Tran_loss: 1.383
+Epoch: 171/200 Iteration:  3762/4400 Tran_loss: 1.271
+Epoch: 172/200 Iteration:  3773/4400 Tran_loss: 1.367
+Epoch: 172/200 Iteration:  3784/4400 Tran_loss: 1.256
+Epoch: 173/200 Iteration:  3795/4400 Tran_loss: 1.357
+Epoch: 173/200 Iteration:  3806/4400 Tran_loss: 1.252
+Epoch: 174/200 Iteration:  3817/4400 Tran_loss: 1.348
+Epoch: 174/200 Iteration:  3828/4400 Tran_loss: 1.243
+Epoch: 175/200 Iteration:  3839/4400 Tran_loss: 1.347
+Epoch: 175/200 Iteration:  3850/4400 Tran_loss: 1.247
+Epoch: 176/200 Iteration:  3861/4400 Tran_loss: 1.369
+Epoch: 176/200 Iteration:  3872/4400 Tran_loss: 1.229
+Epoch: 177/200 Iteration:  3883/4400 Tran_loss: 1.346
+Epoch: 177/200 Iteration:  3894/4400 Tran_loss: 1.192
+Epoch: 178/200 Iteration:  3905/4400 Tran_loss: 1.304
+Epoch: 178/200 Iteration:  3916/4400 Tran_loss: 1.243
+Epoch: 179/200 Iteration:  3927/4400 Tran_loss: 1.323
+Epoch: 179/200 Iteration:  3938/4400 Tran_loss: 1.192
+Epoch: 180/200 Iteration:  3949/4400 Tran_loss: 1.303
+Epoch: 180/200 Iteration:  3960/4400 Tran_loss: 1.222
+Epoch: 181/200 Iteration:  3971/4400 Tran_loss: 1.350
+Epoch: 181/200 Iteration:  3982/4400 Tran_loss: 1.196
+Epoch: 182/200 Iteration:  3993/4400 Tran_loss: 1.293
+Epoch: 182/200 Iteration:  4004/4400 Tran_loss: 1.245
+Epoch: 183/200 Iteration:  4015/4400 Tran_loss: 1.268
+Epoch: 183/200 Iteration:  4026/4400 Tran_loss: 1.151
+Epoch: 184/200 Iteration:  4037/4400 Tran_loss: 1.275
+Epoch: 184/200 Iteration:  4048/4400 Tran_loss: 1.107
+Epoch: 185/200 Iteration:  4059/4400 Tran_loss: 1.190
+Epoch: 185/200 Iteration:  4070/4400 Tran_loss: 1.074
+Epoch: 186/200 Iteration:  4081/4400 Tran_loss: 1.142
+Epoch: 186/200 Iteration:  4092/4400 Tran_loss: 1.059
+Epoch: 187/200 Iteration:  4103/4400 Tran_loss: 1.143
+Epoch: 187/200 Iteration:  4114/4400 Tran_loss: 1.072
+Epoch: 188/200 Iteration:  4125/4400 Tran_loss: 1.190
+Epoch: 188/200 Iteration:  4136/4400 Tran_loss: 1.047
+Epoch: 189/200 Iteration:  4147/4400 Tran_loss: 1.116
+Epoch: 189/200 Iteration:  4158/4400 Tran_loss: 1.018
+Epoch: 190/200 Iteration:  4169/4400 Tran_loss: 1.086
+Epoch: 190/200 Iteration:  4180/4400 Tran_loss: 1.012
+Epoch: 191/200 Iteration:  4191/4400 Tran_loss: 1.090
+Epoch: 191/200 Iteration:  4202/4400 Tran_loss: 0.969
+Epoch: 192/200 Iteration:  4213/4400 Tran_loss: 1.069
+Epoch: 192/200 Iteration:  4224/4400 Tran_loss: 0.952
+Epoch: 193/200 Iteration:  4235/4400 Tran_loss: 1.032
+Epoch: 193/200 Iteration:  4246/4400 Tran_loss: 0.949
+Epoch: 194/200 Iteration:  4257/4400 Tran_loss: 1.007
+Epoch: 194/200 Iteration:  4268/4400 Tran_loss: 0.922
+Epoch: 195/200 Iteration:  4279/4400 Tran_loss: 1.001
+Epoch: 195/200 Iteration:  4290/4400 Tran_loss: 0.904
+Epoch: 196/200 Iteration:  4301/4400 Tran_loss: 1.020
+Epoch: 196/200 Iteration:  4312/4400 Tran_loss: 0.895
+Epoch: 197/200 Iteration:  4323/4400 Tran_loss: 0.982
+Epoch: 197/200 Iteration:  4334/4400 Tran_loss: 0.906
+Epoch: 198/200 Iteration:  4345/4400 Tran_loss: 0.967
+Epoch: 198/200 Iteration:  4356/4400 Tran_loss: 0.894
+Epoch: 199/200 Iteration:  4367/4400 Tran_loss: 0.955
+Epoch: 199/200 Iteration:  4378/4400 Tran_loss: 0.864
+Epoch: 200/200 Iteration:  4389/4400 Tran_loss: 0.983
+Epoch: 200/200 Iteration:  4400/4400 Tran_loss: 0.844
 Model Trained and Saved
 </pre>
 </div>
@@ -16124,7 +16124,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -16162,7 +16162,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_tensors</span><span class="p">(</span><span class="n">loaded_graph</span><span class="p">):</span>
@@ -16219,7 +16219,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">pick_word</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">int_to_vocab</span><span class="p">):</span>
@@ -16230,9 +16230,7 @@ Model Trained and Saved
 <span class="sd">    :return: String of the predicted word</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: Implement Function</span>
-    <span class="n">next_word_key</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
-    <span class="n">next_word</span> <span class="o">=</span> <span class="n">int_to_vocab</span><span class="p">[</span><span class="n">next_word_key</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">next_word</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">int_to_vocab</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">p</span><span class="o">=</span><span class="n">probabilities</span><span class="p">)</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -16275,7 +16273,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">gen_length</span> <span class="o">=</span> <span class="mi">200</span>
@@ -16338,23 +16336,28 @@ Model Trained and Saved
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>moe_szyslak:(sigh) oh, god.
-
-
-marge_simpson: so then i pop my delts, clench and bam! not a dry eye in the house.
-homer_simpson: oh, i&#39;m so proud of you, honey. you bulked up, but managed to keep your femininity.
-marge_simpson:(fierce) and that&#39;s why i didn&#39;t win!
-homer_simpson: sorry, sir, sorry.
-marge_simpson: starting tomorrow, i&#39;m gonna up my glyco-load, use a denser ripping gel...
-homer_simpson:(frightened) denser?!
-marge_simpson: damn straight, i didn&#39;t sacrifice my period for second place! moe_szyslak: sure?
-lisa_simpson:(reading)&#34; world&#39;s worst friend.&#34;
-homer_simpson: hey, guys.
-moe_szyslak: okay, i&#39;m glad you really think i could do it.
-moe_szyslak: hey, hey!
-homer_simpson:(tipsy) no, no, no. no.
-moe_szyslak:....
-marge_simpson: no. no. no, no. no. no. mediterranean ecru? no. no. no more in the bar.
+<pre>moe_szyslak: so dice. it. push some bucks that&#39;s would long moe_szyslak: drunk years. during!
+dying for wait. my homer_simpson: back right.
+!
+homer_simpson: what marge.! moe_szyslak: up so.
+?
+homer_simpson: they mr.! moe_szyslak: him about.
+?
+homer_simpson: no yeah.! sly here..
+?
+homer_simpson: we okay.! sly here..
+?
+homer_simpson: just ask.! sly here..
+?
+homer_simpson: still don&#39;t.. hey here.. c?
+tony that i.. ah here.. party?
+tony that i.. oh here.. once?
+party that i.. wow here.. got?
+tony that what.. beat here.. him?
+tony that we.. how here..!?
+moe that my miss. by here..!?
+homer&#39;s cut, king. with here..!?
+looks all, there. with had..!? waylon_smithers: like all
 </pre>
 </div>
 </div>
