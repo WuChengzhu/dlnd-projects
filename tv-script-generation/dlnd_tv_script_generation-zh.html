@@ -14805,10 +14805,9 @@ Barney_Gumble: Yeah, you should only drink to enhance your social skills.
 <span class="sd">    :return: A tuple of dicts (vocab_to_int, int_to_vocab)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <span class="c1">#     TODO: Implement Function</span>
-    <span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="n">vocab</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">vocab</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">vocab_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="n">word</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocab</span><span class="p">)}</span>
-    <span class="n">int_to_vocab</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">word</span> <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vocab_to_int</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">int_to_vocab</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">word</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocab</span><span class="p">)}</span>
     
     <span class="c1"># uncorrect code </span>
 <span class="c1">#     vocab_to_int = {word: i for i, word in enumerate(text)}</span>
@@ -15153,7 +15152,7 @@ Default GPU Device: /gpu:0
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_init_cell</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">rnn_size</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_init_cell</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">rnn_size</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create an RNN Cell and initialize it.</span>
 <span class="sd">    :param batch_size: Size of batches</span>
@@ -15161,8 +15160,10 @@ Default GPU Device: /gpu:0
 <span class="sd">    :return: Tuple (cell, initialize state)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: Implement Function</span>
-    <span class="n">lstm</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">BasicLSTMCell</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">)</span>
-    <span class="n">cell</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">MultiRNNCell</span><span class="p">([</span><span class="n">lstm</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">make_lstm</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">BasicLSTMCell</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">)</span>
+    
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">MultiRNNCell</span><span class="p">([</span><span class="n">make_lstm</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_layers</span><span class="p">)])</span>
     <span class="n">initial_state</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">zero_state</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">initial_state</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cell</span><span class="p">,</span> <span class="n">initial_state</span>
@@ -15398,33 +15399,38 @@ Default GPU Device: /gpu:0
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>[<br>
-   First Batch<br>
-  [<br>
-    Batch of Input
-    [[ 1  2  3], [ 7  8  9]],
-    Batch of targets
-    [[ 2  3  4], [ 8  9 10]]
-  ],</p>
-<p>Second Batch
-  [
-    Batch of Input
-    [[ 4  5  6], [10 11 12]],
-    Batch of targets
-    [[ 5  6  7], [11 12 13]]
-  ]
-]</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># [  </span>
+<span class="c1">#    First Batch  </span>
+<span class="c1">#   [  </span>
+<span class="c1">#     Batch of Input</span>
+<span class="c1">#     [[ 1  2  3], [ 7  8  9]],</span>
+<span class="c1">#     Batch of targets</span>
+<span class="c1">#     [[ 2  3  4], [ 8  9 10]]</span>
+<span class="c1">#   ],</span>
+ 
+<span class="c1">#   Second Batch</span>
+<span class="c1">#   [</span>
+<span class="c1">#     Batch of Input</span>
+<span class="c1">#     [[ 4  5  6], [10 11 12]],</span>
+<span class="c1">#     Batch of targets</span>
+<span class="c1">#     [[ 5  6  7], [11 12 13]]</span>
+<span class="c1">#   ]</span>
+<span class="c1"># ]</span>
+</pre></div>
 
 </div>
 </div>
 </div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_batches</span><span class="p">(</span><span class="n">int_text</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">):</span>
@@ -15438,17 +15444,29 @@ Default GPU Device: /gpu:0
     <span class="c1"># TODO: Implement Function</span>
     <span class="n">words_per_batch</span> <span class="o">=</span> <span class="n">batch_size</span> <span class="o">*</span> <span class="n">seq_length</span>
     <span class="n">n_batches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">int_text</span><span class="p">)</span> <span class="o">//</span> <span class="n">words_per_batch</span>
-    <span class="n">int_text</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">int_text</span><span class="p">[:</span><span class="n">n_batches</span> <span class="o">*</span> <span class="n">words_per_batch</span><span class="p">])</span>
-    <span class="n">int_text</span> <span class="o">=</span> <span class="n">int_text</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#     int_text = np.array(int_text[:n_batches * words_per_batch])</span>
+<span class="c1">#     int_text = int_text.reshape(batch_size, -1)</span>
     
     <span class="n">batches</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">int_text</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">seq_length</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">int_text</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">seq_length</span><span class="p">]</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">y</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_batches</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">seq_length</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">n_batches</span> <span class="o">*</span> <span class="n">seq_length</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">int_text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span><span class="o">+</span><span class="n">seq_length</span><span class="p">])</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">int_text</span><span class="p">[</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">seq_length</span><span class="p">])</span>
         <span class="n">batches</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
-        
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batches</span><span class="p">)</span>
+
+<span class="c1"># another way</span>
+<span class="c1"># def get_batches(int_text, batch_size, seq_length):</span>
+<span class="c1">#     words_per_batch = batch_size * seq_length</span>
+<span class="c1">#     n_batches = len(int_text) // words_per_batch</span>
+<span class="c1">#     x_data = np.array(int_text[:n_batches * words_per_batch])</span>
+<span class="c1">#     y_data = np.array(int_text[1:n_batches * words_per_batch + 1])</span>
+<span class="c1">#     x_batches = np.split(x_data.reshape(batch_size, -1), n_batches, 1)</span>
+<span class="c1">#     y_batches = np.split(y_data.reshape(batch_size, -1), n_batches, 1)</span>
+    
+<span class="c1">#     return np.array(list(zip(x_batches, y_batches)))</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">DON&#39;T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE</span>
@@ -15499,17 +15517,17 @@ Default GPU Device: /gpu:0
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Number of Epochs</span>
-<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">300</span>
 <span class="c1"># Batch Size</span>
 <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">256</span>
 <span class="c1"># RNN Size</span>
 <span class="n">rnn_size</span> <span class="o">=</span> <span class="mi">512</span>
 <span class="c1"># Embedding Dimension Size</span>
-<span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">embed_dim</span> <span class="o">=</span> <span class="mi">300</span>
 <span class="c1"># Sequence Length</span>
 <span class="n">seq_length</span> <span class="o">=</span> <span class="mi">12</span>
 <span class="c1"># Learning Rate</span>
@@ -15539,7 +15557,7 @@ Default GPU Device: /gpu:0
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -15589,7 +15607,7 @@ Default GPU Device: /gpu:0
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">batches</span> <span class="o">=</span> <span class="n">get_batches</span><span class="p">(</span><span class="n">int_text</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">)</span>
@@ -15606,7 +15624,7 @@ Default GPU Device: /gpu:0
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[18]:</div>
+<div class="prompt output_prompt">Out[19]:</div>
 
 
 
@@ -15623,7 +15641,7 @@ Default GPU Device: /gpu:0
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -15655,7 +15673,7 @@ Default GPU Device: /gpu:0
 <span class="c1">#                     train_loss))</span>
             <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="n">show_every_n_batches</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Epoch: </span><span class="si">{:&gt;3}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch_i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_epochs</span><span class="p">),</span>
-                      <span class="s1">&#39;Iteration: </span><span class="si">{:&gt;5}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">batches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_epochs</span><span class="p">),</span>
+                      <span class="s1">&#39;Iteration: </span><span class="si">{:&gt;4}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">batches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_epochs</span><span class="p">),</span>
                       <span class="s1">&#39;Tran_loss: </span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_loss</span><span class="p">))</span>
             <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -15679,406 +15697,606 @@ Default GPU Device: /gpu:0
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Epoch:   1/200 Iteration:    11/4400 Tran_loss: 6.563
-Epoch:   1/200 Iteration:    22/4400 Tran_loss: 6.604
-Epoch:   2/200 Iteration:    33/4400 Tran_loss: 6.051
-Epoch:   2/200 Iteration:    44/4400 Tran_loss: 6.224
-Epoch:   3/200 Iteration:    55/4400 Tran_loss: 6.021
-Epoch:   3/200 Iteration:    66/4400 Tran_loss: 6.114
-Epoch:   4/200 Iteration:    77/4400 Tran_loss: 5.987
-Epoch:   4/200 Iteration:    88/4400 Tran_loss: 6.115
-Epoch:   5/200 Iteration:    99/4400 Tran_loss: 5.971
-Epoch:   5/200 Iteration:   110/4400 Tran_loss: 6.093
-Epoch:   6/200 Iteration:   121/4400 Tran_loss: 5.963
-Epoch:   6/200 Iteration:   132/4400 Tran_loss: 6.081
-Epoch:   7/200 Iteration:   143/4400 Tran_loss: 5.956
-Epoch:   7/200 Iteration:   154/4400 Tran_loss: 6.072
-Epoch:   8/200 Iteration:   165/4400 Tran_loss: 5.952
-Epoch:   8/200 Iteration:   176/4400 Tran_loss: 6.063
-Epoch:   9/200 Iteration:   187/4400 Tran_loss: 5.945
-Epoch:   9/200 Iteration:   198/4400 Tran_loss: 6.049
-Epoch:  10/200 Iteration:   209/4400 Tran_loss: 5.942
-Epoch:  10/200 Iteration:   220/4400 Tran_loss: 6.041
-Epoch:  11/200 Iteration:   231/4400 Tran_loss: 5.937
-Epoch:  11/200 Iteration:   242/4400 Tran_loss: 6.035
-Epoch:  12/200 Iteration:   253/4400 Tran_loss: 5.933
-Epoch:  12/200 Iteration:   264/4400 Tran_loss: 6.031
-Epoch:  13/200 Iteration:   275/4400 Tran_loss: 5.929
-Epoch:  13/200 Iteration:   286/4400 Tran_loss: 6.027
-Epoch:  14/200 Iteration:   297/4400 Tran_loss: 5.923
-Epoch:  14/200 Iteration:   308/4400 Tran_loss: 6.023
-Epoch:  15/200 Iteration:   319/4400 Tran_loss: 5.919
-Epoch:  15/200 Iteration:   330/4400 Tran_loss: 6.017
-Epoch:  16/200 Iteration:   341/4400 Tran_loss: 5.913
-Epoch:  16/200 Iteration:   352/4400 Tran_loss: 6.012
-Epoch:  17/200 Iteration:   363/4400 Tran_loss: 5.908
-Epoch:  17/200 Iteration:   374/4400 Tran_loss: 6.004
-Epoch:  18/200 Iteration:   385/4400 Tran_loss: 5.900
-Epoch:  18/200 Iteration:   396/4400 Tran_loss: 5.996
-Epoch:  19/200 Iteration:   407/4400 Tran_loss: 5.892
-Epoch:  19/200 Iteration:   418/4400 Tran_loss: 5.986
-Epoch:  20/200 Iteration:   429/4400 Tran_loss: 5.880
-Epoch:  20/200 Iteration:   440/4400 Tran_loss: 5.972
-Epoch:  21/200 Iteration:   451/4400 Tran_loss: 5.843
-Epoch:  21/200 Iteration:   462/4400 Tran_loss: 5.867
-Epoch:  22/200 Iteration:   473/4400 Tran_loss: 5.702
-Epoch:  22/200 Iteration:   484/4400 Tran_loss: 5.724
-Epoch:  23/200 Iteration:   495/4400 Tran_loss: 5.550
-Epoch:  23/200 Iteration:   506/4400 Tran_loss: 5.563
-Epoch:  24/200 Iteration:   517/4400 Tran_loss: 5.411
-Epoch:  24/200 Iteration:   528/4400 Tran_loss: 5.443
-Epoch:  25/200 Iteration:   539/4400 Tran_loss: 5.308
-Epoch:  25/200 Iteration:   550/4400 Tran_loss: 5.349
-Epoch:  26/200 Iteration:   561/4400 Tran_loss: 5.216
-Epoch:  26/200 Iteration:   572/4400 Tran_loss: 5.252
-Epoch:  27/200 Iteration:   583/4400 Tran_loss: 5.132
-Epoch:  27/200 Iteration:   594/4400 Tran_loss: 5.169
-Epoch:  28/200 Iteration:   605/4400 Tran_loss: 5.057
-Epoch:  28/200 Iteration:   616/4400 Tran_loss: 5.106
-Epoch:  29/200 Iteration:   627/4400 Tran_loss: 5.001
-Epoch:  29/200 Iteration:   638/4400 Tran_loss: 5.023
-Epoch:  30/200 Iteration:   649/4400 Tran_loss: 4.948
-Epoch:  30/200 Iteration:   660/4400 Tran_loss: 4.964
-Epoch:  31/200 Iteration:   671/4400 Tran_loss: 4.873
-Epoch:  31/200 Iteration:   682/4400 Tran_loss: 4.896
-Epoch:  32/200 Iteration:   693/4400 Tran_loss: 4.817
-Epoch:  32/200 Iteration:   704/4400 Tran_loss: 4.854
-Epoch:  33/200 Iteration:   715/4400 Tran_loss: 4.769
-Epoch:  33/200 Iteration:   726/4400 Tran_loss: 4.797
-Epoch:  34/200 Iteration:   737/4400 Tran_loss: 4.727
-Epoch:  34/200 Iteration:   748/4400 Tran_loss: 4.776
-Epoch:  35/200 Iteration:   759/4400 Tran_loss: 4.699
-Epoch:  35/200 Iteration:   770/4400 Tran_loss: 4.709
-Epoch:  36/200 Iteration:   781/4400 Tran_loss: 4.627
-Epoch:  36/200 Iteration:   792/4400 Tran_loss: 4.658
-Epoch:  37/200 Iteration:   803/4400 Tran_loss: 4.578
-Epoch:  37/200 Iteration:   814/4400 Tran_loss: 4.585
-Epoch:  38/200 Iteration:   825/4400 Tran_loss: 4.522
-Epoch:  38/200 Iteration:   836/4400 Tran_loss: 4.568
-Epoch:  39/200 Iteration:   847/4400 Tran_loss: 4.508
-Epoch:  39/200 Iteration:   858/4400 Tran_loss: 4.506
-Epoch:  40/200 Iteration:   869/4400 Tran_loss: 4.471
-Epoch:  40/200 Iteration:   880/4400 Tran_loss: 4.469
-Epoch:  41/200 Iteration:   891/4400 Tran_loss: 4.420
-Epoch:  41/200 Iteration:   902/4400 Tran_loss: 4.454
-Epoch:  42/200 Iteration:   913/4400 Tran_loss: 4.362
-Epoch:  42/200 Iteration:   924/4400 Tran_loss: 4.404
-Epoch:  43/200 Iteration:   935/4400 Tran_loss: 4.341
-Epoch:  43/200 Iteration:   946/4400 Tran_loss: 4.326
-Epoch:  44/200 Iteration:   957/4400 Tran_loss: 4.306
-Epoch:  44/200 Iteration:   968/4400 Tran_loss: 4.281
-Epoch:  45/200 Iteration:   979/4400 Tran_loss: 4.248
-Epoch:  45/200 Iteration:   990/4400 Tran_loss: 4.277
-Epoch:  46/200 Iteration:  1001/4400 Tran_loss: 4.217
-Epoch:  46/200 Iteration:  1012/4400 Tran_loss: 4.193
-Epoch:  47/200 Iteration:  1023/4400 Tran_loss: 4.197
-Epoch:  47/200 Iteration:  1034/4400 Tran_loss: 4.175
-Epoch:  48/200 Iteration:  1045/4400 Tran_loss: 4.142
-Epoch:  48/200 Iteration:  1056/4400 Tran_loss: 4.165
-Epoch:  49/200 Iteration:  1067/4400 Tran_loss: 4.145
-Epoch:  49/200 Iteration:  1078/4400 Tran_loss: 4.095
-Epoch:  50/200 Iteration:  1089/4400 Tran_loss: 4.100
-Epoch:  50/200 Iteration:  1100/4400 Tran_loss: 4.080
-Epoch:  51/200 Iteration:  1111/4400 Tran_loss: 4.045
-Epoch:  51/200 Iteration:  1122/4400 Tran_loss: 4.023
-Epoch:  52/200 Iteration:  1133/4400 Tran_loss: 4.085
-Epoch:  52/200 Iteration:  1144/4400 Tran_loss: 4.054
-Epoch:  53/200 Iteration:  1155/4400 Tran_loss: 4.015
-Epoch:  53/200 Iteration:  1166/4400 Tran_loss: 3.978
-Epoch:  54/200 Iteration:  1177/4400 Tran_loss: 3.975
-Epoch:  54/200 Iteration:  1188/4400 Tran_loss: 3.951
-Epoch:  55/200 Iteration:  1199/4400 Tran_loss: 3.960
-Epoch:  55/200 Iteration:  1210/4400 Tran_loss: 3.892
-Epoch:  56/200 Iteration:  1221/4400 Tran_loss: 3.902
-Epoch:  56/200 Iteration:  1232/4400 Tran_loss: 3.876
-Epoch:  57/200 Iteration:  1243/4400 Tran_loss: 3.889
-Epoch:  57/200 Iteration:  1254/4400 Tran_loss: 3.856
-Epoch:  58/200 Iteration:  1265/4400 Tran_loss: 3.879
-Epoch:  58/200 Iteration:  1276/4400 Tran_loss: 3.820
-Epoch:  59/200 Iteration:  1287/4400 Tran_loss: 3.842
-Epoch:  59/200 Iteration:  1298/4400 Tran_loss: 3.776
-Epoch:  60/200 Iteration:  1309/4400 Tran_loss: 3.827
-Epoch:  60/200 Iteration:  1320/4400 Tran_loss: 3.797
-Epoch:  61/200 Iteration:  1331/4400 Tran_loss: 3.915
-Epoch:  61/200 Iteration:  1342/4400 Tran_loss: 3.884
-Epoch:  62/200 Iteration:  1353/4400 Tran_loss: 3.811
-Epoch:  62/200 Iteration:  1364/4400 Tran_loss: 3.817
-Epoch:  63/200 Iteration:  1375/4400 Tran_loss: 3.828
-Epoch:  63/200 Iteration:  1386/4400 Tran_loss: 3.692
-Epoch:  64/200 Iteration:  1397/4400 Tran_loss: 3.669
-Epoch:  64/200 Iteration:  1408/4400 Tran_loss: 3.619
-Epoch:  65/200 Iteration:  1419/4400 Tran_loss: 3.627
-Epoch:  65/200 Iteration:  1430/4400 Tran_loss: 3.567
-Epoch:  66/200 Iteration:  1441/4400 Tran_loss: 3.584
-Epoch:  66/200 Iteration:  1452/4400 Tran_loss: 3.520
-Epoch:  67/200 Iteration:  1463/4400 Tran_loss: 3.548
-Epoch:  67/200 Iteration:  1474/4400 Tran_loss: 3.501
-Epoch:  68/200 Iteration:  1485/4400 Tran_loss: 3.518
-Epoch:  68/200 Iteration:  1496/4400 Tran_loss: 3.457
-Epoch:  69/200 Iteration:  1507/4400 Tran_loss: 3.486
-Epoch:  69/200 Iteration:  1518/4400 Tran_loss: 3.445
-Epoch:  70/200 Iteration:  1529/4400 Tran_loss: 3.484
-Epoch:  70/200 Iteration:  1540/4400 Tran_loss: 3.420
-Epoch:  71/200 Iteration:  1551/4400 Tran_loss: 3.468
-Epoch:  71/200 Iteration:  1562/4400 Tran_loss: 3.431
-Epoch:  72/200 Iteration:  1573/4400 Tran_loss: 3.489
-Epoch:  72/200 Iteration:  1584/4400 Tran_loss: 3.381
-Epoch:  73/200 Iteration:  1595/4400 Tran_loss: 3.411
-Epoch:  73/200 Iteration:  1606/4400 Tran_loss: 3.363
-Epoch:  74/200 Iteration:  1617/4400 Tran_loss: 3.405
-Epoch:  74/200 Iteration:  1628/4400 Tran_loss: 3.389
-Epoch:  75/200 Iteration:  1639/4400 Tran_loss: 3.431
-Epoch:  75/200 Iteration:  1650/4400 Tran_loss: 3.310
-Epoch:  76/200 Iteration:  1661/4400 Tran_loss: 3.336
-Epoch:  76/200 Iteration:  1672/4400 Tran_loss: 3.273
-Epoch:  77/200 Iteration:  1683/4400 Tran_loss: 3.349
-Epoch:  77/200 Iteration:  1694/4400 Tran_loss: 3.229
-Epoch:  78/200 Iteration:  1705/4400 Tran_loss: 3.271
-Epoch:  78/200 Iteration:  1716/4400 Tran_loss: 3.217
-Epoch:  79/200 Iteration:  1727/4400 Tran_loss: 3.271
-Epoch:  79/200 Iteration:  1738/4400 Tran_loss: 3.182
-Epoch:  80/200 Iteration:  1749/4400 Tran_loss: 3.221
-Epoch:  80/200 Iteration:  1760/4400 Tran_loss: 3.144
-Epoch:  81/200 Iteration:  1771/4400 Tran_loss: 3.207
-Epoch:  81/200 Iteration:  1782/4400 Tran_loss: 3.107
-Epoch:  82/200 Iteration:  1793/4400 Tran_loss: 3.165
-Epoch:  82/200 Iteration:  1804/4400 Tran_loss: 3.092
-Epoch:  83/200 Iteration:  1815/4400 Tran_loss: 3.137
-Epoch:  83/200 Iteration:  1826/4400 Tran_loss: 3.044
-Epoch:  84/200 Iteration:  1837/4400 Tran_loss: 3.097
-Epoch:  84/200 Iteration:  1848/4400 Tran_loss: 3.023
-Epoch:  85/200 Iteration:  1859/4400 Tran_loss: 3.056
-Epoch:  85/200 Iteration:  1870/4400 Tran_loss: 2.978
-Epoch:  86/200 Iteration:  1881/4400 Tran_loss: 3.053
-Epoch:  86/200 Iteration:  1892/4400 Tran_loss: 2.976
-Epoch:  87/200 Iteration:  1903/4400 Tran_loss: 3.029
-Epoch:  87/200 Iteration:  1914/4400 Tran_loss: 2.927
-Epoch:  88/200 Iteration:  1925/4400 Tran_loss: 2.984
-Epoch:  88/200 Iteration:  1936/4400 Tran_loss: 2.907
-Epoch:  89/200 Iteration:  1947/4400 Tran_loss: 2.985
-Epoch:  89/200 Iteration:  1958/4400 Tran_loss: 2.910
-Epoch:  90/200 Iteration:  1969/4400 Tran_loss: 2.950
-Epoch:  90/200 Iteration:  1980/4400 Tran_loss: 2.861
-Epoch:  91/200 Iteration:  1991/4400 Tran_loss: 2.952
-Epoch:  91/200 Iteration:  2002/4400 Tran_loss: 2.861
-Epoch:  92/200 Iteration:  2013/4400 Tran_loss: 2.957
-Epoch:  92/200 Iteration:  2024/4400 Tran_loss: 2.820
-Epoch:  93/200 Iteration:  2035/4400 Tran_loss: 2.901
-Epoch:  93/200 Iteration:  2046/4400 Tran_loss: 2.810
-Epoch:  94/200 Iteration:  2057/4400 Tran_loss: 2.879
-Epoch:  94/200 Iteration:  2068/4400 Tran_loss: 2.769
-Epoch:  95/200 Iteration:  2079/4400 Tran_loss: 2.871
-Epoch:  95/200 Iteration:  2090/4400 Tran_loss: 2.743
-Epoch:  96/200 Iteration:  2101/4400 Tran_loss: 2.829
-Epoch:  96/200 Iteration:  2112/4400 Tran_loss: 2.727
-Epoch:  97/200 Iteration:  2123/4400 Tran_loss: 2.796
-Epoch:  97/200 Iteration:  2134/4400 Tran_loss: 2.725
-Epoch:  98/200 Iteration:  2145/4400 Tran_loss: 2.802
-Epoch:  98/200 Iteration:  2156/4400 Tran_loss: 2.689
-Epoch:  99/200 Iteration:  2167/4400 Tran_loss: 2.761
-Epoch:  99/200 Iteration:  2178/4400 Tran_loss: 2.664
-Epoch: 100/200 Iteration:  2189/4400 Tran_loss: 2.773
-Epoch: 100/200 Iteration:  2200/4400 Tran_loss: 2.664
-Epoch: 101/200 Iteration:  2211/4400 Tran_loss: 2.737
-Epoch: 101/200 Iteration:  2222/4400 Tran_loss: 2.590
-Epoch: 102/200 Iteration:  2233/4400 Tran_loss: 2.727
-Epoch: 102/200 Iteration:  2244/4400 Tran_loss: 2.580
-Epoch: 103/200 Iteration:  2255/4400 Tran_loss: 2.660
-Epoch: 103/200 Iteration:  2266/4400 Tran_loss: 2.562
-Epoch: 104/200 Iteration:  2277/4400 Tran_loss: 2.627
-Epoch: 104/200 Iteration:  2288/4400 Tran_loss: 2.509
-Epoch: 105/200 Iteration:  2299/4400 Tran_loss: 2.638
-Epoch: 105/200 Iteration:  2310/4400 Tran_loss: 2.528
-Epoch: 106/200 Iteration:  2321/4400 Tran_loss: 2.633
-Epoch: 106/200 Iteration:  2332/4400 Tran_loss: 2.498
-Epoch: 107/200 Iteration:  2343/4400 Tran_loss: 2.598
-Epoch: 107/200 Iteration:  2354/4400 Tran_loss: 2.527
-Epoch: 108/200 Iteration:  2365/4400 Tran_loss: 2.612
-Epoch: 108/200 Iteration:  2376/4400 Tran_loss: 2.508
-Epoch: 109/200 Iteration:  2387/4400 Tran_loss: 2.644
-Epoch: 109/200 Iteration:  2398/4400 Tran_loss: 2.534
-Epoch: 110/200 Iteration:  2409/4400 Tran_loss: 2.604
-Epoch: 110/200 Iteration:  2420/4400 Tran_loss: 2.508
-Epoch: 111/200 Iteration:  2431/4400 Tran_loss: 2.598
-Epoch: 111/200 Iteration:  2442/4400 Tran_loss: 2.499
-Epoch: 112/200 Iteration:  2453/4400 Tran_loss: 2.594
-Epoch: 112/200 Iteration:  2464/4400 Tran_loss: 2.453
-Epoch: 113/200 Iteration:  2475/4400 Tran_loss: 2.536
-Epoch: 113/200 Iteration:  2486/4400 Tran_loss: 2.381
-Epoch: 114/200 Iteration:  2497/4400 Tran_loss: 2.485
-Epoch: 114/200 Iteration:  2508/4400 Tran_loss: 2.383
-Epoch: 115/200 Iteration:  2519/4400 Tran_loss: 2.469
-Epoch: 115/200 Iteration:  2530/4400 Tran_loss: 2.341
-Epoch: 116/200 Iteration:  2541/4400 Tran_loss: 2.388
-Epoch: 116/200 Iteration:  2552/4400 Tran_loss: 2.245
-Epoch: 117/200 Iteration:  2563/4400 Tran_loss: 2.348
-Epoch: 117/200 Iteration:  2574/4400 Tran_loss: 2.229
-Epoch: 118/200 Iteration:  2585/4400 Tran_loss: 2.320
-Epoch: 118/200 Iteration:  2596/4400 Tran_loss: 2.200
-Epoch: 119/200 Iteration:  2607/4400 Tran_loss: 2.286
-Epoch: 119/200 Iteration:  2618/4400 Tran_loss: 2.167
-Epoch: 120/200 Iteration:  2629/4400 Tran_loss: 2.248
-Epoch: 120/200 Iteration:  2640/4400 Tran_loss: 2.122
-Epoch: 121/200 Iteration:  2651/4400 Tran_loss: 2.229
-Epoch: 121/200 Iteration:  2662/4400 Tran_loss: 2.126
-Epoch: 122/200 Iteration:  2673/4400 Tran_loss: 2.204
-Epoch: 122/200 Iteration:  2684/4400 Tran_loss: 2.075
-Epoch: 123/200 Iteration:  2695/4400 Tran_loss: 2.177
-Epoch: 123/200 Iteration:  2706/4400 Tran_loss: 2.118
-Epoch: 124/200 Iteration:  2717/4400 Tran_loss: 2.160
-Epoch: 124/200 Iteration:  2728/4400 Tran_loss: 2.035
-Epoch: 125/200 Iteration:  2739/4400 Tran_loss: 2.134
-Epoch: 125/200 Iteration:  2750/4400 Tran_loss: 2.029
-Epoch: 126/200 Iteration:  2761/4400 Tran_loss: 2.105
-Epoch: 126/200 Iteration:  2772/4400 Tran_loss: 2.013
-Epoch: 127/200 Iteration:  2783/4400 Tran_loss: 2.088
-Epoch: 127/200 Iteration:  2794/4400 Tran_loss: 1.974
-Epoch: 128/200 Iteration:  2805/4400 Tran_loss: 2.077
-Epoch: 128/200 Iteration:  2816/4400 Tran_loss: 1.957
-Epoch: 129/200 Iteration:  2827/4400 Tran_loss: 2.043
-Epoch: 129/200 Iteration:  2838/4400 Tran_loss: 1.940
-Epoch: 130/200 Iteration:  2849/4400 Tran_loss: 2.025
-Epoch: 130/200 Iteration:  2860/4400 Tran_loss: 1.968
-Epoch: 131/200 Iteration:  2871/4400 Tran_loss: 2.016
-Epoch: 131/200 Iteration:  2882/4400 Tran_loss: 1.944
-Epoch: 132/200 Iteration:  2893/4400 Tran_loss: 2.014
-Epoch: 132/200 Iteration:  2904/4400 Tran_loss: 1.912
-Epoch: 133/200 Iteration:  2915/4400 Tran_loss: 2.011
-Epoch: 133/200 Iteration:  2926/4400 Tran_loss: 1.919
-Epoch: 134/200 Iteration:  2937/4400 Tran_loss: 2.026
-Epoch: 134/200 Iteration:  2948/4400 Tran_loss: 1.906
-Epoch: 135/200 Iteration:  2959/4400 Tran_loss: 1.961
-Epoch: 135/200 Iteration:  2970/4400 Tran_loss: 1.921
-Epoch: 136/200 Iteration:  2981/4400 Tran_loss: 1.986
-Epoch: 136/200 Iteration:  2992/4400 Tran_loss: 1.877
-Epoch: 137/200 Iteration:  3003/4400 Tran_loss: 1.958
-Epoch: 137/200 Iteration:  3014/4400 Tran_loss: 1.836
-Epoch: 138/200 Iteration:  3025/4400 Tran_loss: 1.943
-Epoch: 138/200 Iteration:  3036/4400 Tran_loss: 1.832
-Epoch: 139/200 Iteration:  3047/4400 Tran_loss: 1.922
-Epoch: 139/200 Iteration:  3058/4400 Tran_loss: 1.806
-Epoch: 140/200 Iteration:  3069/4400 Tran_loss: 1.880
-Epoch: 140/200 Iteration:  3080/4400 Tran_loss: 1.785
-Epoch: 141/200 Iteration:  3091/4400 Tran_loss: 1.874
-Epoch: 141/200 Iteration:  3102/4400 Tran_loss: 1.747
-Epoch: 142/200 Iteration:  3113/4400 Tran_loss: 1.823
-Epoch: 142/200 Iteration:  3124/4400 Tran_loss: 1.769
-Epoch: 143/200 Iteration:  3135/4400 Tran_loss: 1.881
-Epoch: 143/200 Iteration:  3146/4400 Tran_loss: 1.719
-Epoch: 144/200 Iteration:  3157/4400 Tran_loss: 1.868
-Epoch: 144/200 Iteration:  3168/4400 Tran_loss: 1.750
-Epoch: 145/200 Iteration:  3179/4400 Tran_loss: 1.798
-Epoch: 145/200 Iteration:  3190/4400 Tran_loss: 1.779
-Epoch: 146/200 Iteration:  3201/4400 Tran_loss: 1.824
-Epoch: 146/200 Iteration:  3212/4400 Tran_loss: 1.695
-Epoch: 147/200 Iteration:  3223/4400 Tran_loss: 1.919
-Epoch: 147/200 Iteration:  3234/4400 Tran_loss: 1.789
-Epoch: 148/200 Iteration:  3245/4400 Tran_loss: 1.888
-Epoch: 148/200 Iteration:  3256/4400 Tran_loss: 1.837
-Epoch: 149/200 Iteration:  3267/4400 Tran_loss: 1.920
-Epoch: 149/200 Iteration:  3278/4400 Tran_loss: 1.826
-Epoch: 150/200 Iteration:  3289/4400 Tran_loss: 1.907
-Epoch: 150/200 Iteration:  3300/4400 Tran_loss: 1.849
-Epoch: 151/200 Iteration:  3311/4400 Tran_loss: 1.948
-Epoch: 151/200 Iteration:  3322/4400 Tran_loss: 1.819
-Epoch: 152/200 Iteration:  3333/4400 Tran_loss: 1.941
-Epoch: 152/200 Iteration:  3344/4400 Tran_loss: 1.924
-Epoch: 153/200 Iteration:  3355/4400 Tran_loss: 1.993
-Epoch: 153/200 Iteration:  3366/4400 Tran_loss: 1.816
-Epoch: 154/200 Iteration:  3377/4400 Tran_loss: 1.861
-Epoch: 154/200 Iteration:  3388/4400 Tran_loss: 1.677
-Epoch: 155/200 Iteration:  3399/4400 Tran_loss: 1.774
-Epoch: 155/200 Iteration:  3410/4400 Tran_loss: 1.654
-Epoch: 156/200 Iteration:  3421/4400 Tran_loss: 1.742
-Epoch: 156/200 Iteration:  3432/4400 Tran_loss: 1.666
-Epoch: 157/200 Iteration:  3443/4400 Tran_loss: 1.725
-Epoch: 157/200 Iteration:  3454/4400 Tran_loss: 1.576
-Epoch: 158/200 Iteration:  3465/4400 Tran_loss: 1.671
-Epoch: 158/200 Iteration:  3476/4400 Tran_loss: 1.565
-Epoch: 159/200 Iteration:  3487/4400 Tran_loss: 1.632
-Epoch: 159/200 Iteration:  3498/4400 Tran_loss: 1.551
-Epoch: 160/200 Iteration:  3509/4400 Tran_loss: 1.624
-Epoch: 160/200 Iteration:  3520/4400 Tran_loss: 1.529
-Epoch: 161/200 Iteration:  3531/4400 Tran_loss: 1.662
-Epoch: 161/200 Iteration:  3542/4400 Tran_loss: 1.544
-Epoch: 162/200 Iteration:  3553/4400 Tran_loss: 1.670
-Epoch: 162/200 Iteration:  3564/4400 Tran_loss: 1.581
-Epoch: 163/200 Iteration:  3575/4400 Tran_loss: 1.759
-Epoch: 163/200 Iteration:  3586/4400 Tran_loss: 1.658
-Epoch: 164/200 Iteration:  3597/4400 Tran_loss: 1.797
-Epoch: 164/200 Iteration:  3608/4400 Tran_loss: 1.689
-Epoch: 165/200 Iteration:  3619/4400 Tran_loss: 1.788
-Epoch: 165/200 Iteration:  3630/4400 Tran_loss: 1.632
-Epoch: 166/200 Iteration:  3641/4400 Tran_loss: 1.652
-Epoch: 166/200 Iteration:  3652/4400 Tran_loss: 1.477
-Epoch: 167/200 Iteration:  3663/4400 Tran_loss: 1.531
-Epoch: 167/200 Iteration:  3674/4400 Tran_loss: 1.395
-Epoch: 168/200 Iteration:  3685/4400 Tran_loss: 1.464
-Epoch: 168/200 Iteration:  3696/4400 Tran_loss: 1.346
-Epoch: 169/200 Iteration:  3707/4400 Tran_loss: 1.424
-Epoch: 169/200 Iteration:  3718/4400 Tran_loss: 1.305
-Epoch: 170/200 Iteration:  3729/4400 Tran_loss: 1.398
-Epoch: 170/200 Iteration:  3740/4400 Tran_loss: 1.294
-Epoch: 171/200 Iteration:  3751/4400 Tran_loss: 1.383
-Epoch: 171/200 Iteration:  3762/4400 Tran_loss: 1.271
-Epoch: 172/200 Iteration:  3773/4400 Tran_loss: 1.367
-Epoch: 172/200 Iteration:  3784/4400 Tran_loss: 1.256
-Epoch: 173/200 Iteration:  3795/4400 Tran_loss: 1.357
-Epoch: 173/200 Iteration:  3806/4400 Tran_loss: 1.252
-Epoch: 174/200 Iteration:  3817/4400 Tran_loss: 1.348
-Epoch: 174/200 Iteration:  3828/4400 Tran_loss: 1.243
-Epoch: 175/200 Iteration:  3839/4400 Tran_loss: 1.347
-Epoch: 175/200 Iteration:  3850/4400 Tran_loss: 1.247
-Epoch: 176/200 Iteration:  3861/4400 Tran_loss: 1.369
-Epoch: 176/200 Iteration:  3872/4400 Tran_loss: 1.229
-Epoch: 177/200 Iteration:  3883/4400 Tran_loss: 1.346
-Epoch: 177/200 Iteration:  3894/4400 Tran_loss: 1.192
-Epoch: 178/200 Iteration:  3905/4400 Tran_loss: 1.304
-Epoch: 178/200 Iteration:  3916/4400 Tran_loss: 1.243
-Epoch: 179/200 Iteration:  3927/4400 Tran_loss: 1.323
-Epoch: 179/200 Iteration:  3938/4400 Tran_loss: 1.192
-Epoch: 180/200 Iteration:  3949/4400 Tran_loss: 1.303
-Epoch: 180/200 Iteration:  3960/4400 Tran_loss: 1.222
-Epoch: 181/200 Iteration:  3971/4400 Tran_loss: 1.350
-Epoch: 181/200 Iteration:  3982/4400 Tran_loss: 1.196
-Epoch: 182/200 Iteration:  3993/4400 Tran_loss: 1.293
-Epoch: 182/200 Iteration:  4004/4400 Tran_loss: 1.245
-Epoch: 183/200 Iteration:  4015/4400 Tran_loss: 1.268
-Epoch: 183/200 Iteration:  4026/4400 Tran_loss: 1.151
-Epoch: 184/200 Iteration:  4037/4400 Tran_loss: 1.275
-Epoch: 184/200 Iteration:  4048/4400 Tran_loss: 1.107
-Epoch: 185/200 Iteration:  4059/4400 Tran_loss: 1.190
-Epoch: 185/200 Iteration:  4070/4400 Tran_loss: 1.074
-Epoch: 186/200 Iteration:  4081/4400 Tran_loss: 1.142
-Epoch: 186/200 Iteration:  4092/4400 Tran_loss: 1.059
-Epoch: 187/200 Iteration:  4103/4400 Tran_loss: 1.143
-Epoch: 187/200 Iteration:  4114/4400 Tran_loss: 1.072
-Epoch: 188/200 Iteration:  4125/4400 Tran_loss: 1.190
-Epoch: 188/200 Iteration:  4136/4400 Tran_loss: 1.047
-Epoch: 189/200 Iteration:  4147/4400 Tran_loss: 1.116
-Epoch: 189/200 Iteration:  4158/4400 Tran_loss: 1.018
-Epoch: 190/200 Iteration:  4169/4400 Tran_loss: 1.086
-Epoch: 190/200 Iteration:  4180/4400 Tran_loss: 1.012
-Epoch: 191/200 Iteration:  4191/4400 Tran_loss: 1.090
-Epoch: 191/200 Iteration:  4202/4400 Tran_loss: 0.969
-Epoch: 192/200 Iteration:  4213/4400 Tran_loss: 1.069
-Epoch: 192/200 Iteration:  4224/4400 Tran_loss: 0.952
-Epoch: 193/200 Iteration:  4235/4400 Tran_loss: 1.032
-Epoch: 193/200 Iteration:  4246/4400 Tran_loss: 0.949
-Epoch: 194/200 Iteration:  4257/4400 Tran_loss: 1.007
-Epoch: 194/200 Iteration:  4268/4400 Tran_loss: 0.922
-Epoch: 195/200 Iteration:  4279/4400 Tran_loss: 1.001
-Epoch: 195/200 Iteration:  4290/4400 Tran_loss: 0.904
-Epoch: 196/200 Iteration:  4301/4400 Tran_loss: 1.020
-Epoch: 196/200 Iteration:  4312/4400 Tran_loss: 0.895
-Epoch: 197/200 Iteration:  4323/4400 Tran_loss: 0.982
-Epoch: 197/200 Iteration:  4334/4400 Tran_loss: 0.906
-Epoch: 198/200 Iteration:  4345/4400 Tran_loss: 0.967
-Epoch: 198/200 Iteration:  4356/4400 Tran_loss: 0.894
-Epoch: 199/200 Iteration:  4367/4400 Tran_loss: 0.955
-Epoch: 199/200 Iteration:  4378/4400 Tran_loss: 0.864
-Epoch: 200/200 Iteration:  4389/4400 Tran_loss: 0.983
-Epoch: 200/200 Iteration:  4400/4400 Tran_loss: 0.844
+<pre>Epoch:   1/300 Iteration:   11/6600 Tran_loss: 6.735
+Epoch:   1/300 Iteration:   22/6600 Tran_loss: 6.656
+Epoch:   2/300 Iteration:   33/6600 Tran_loss: 6.134
+Epoch:   2/300 Iteration:   44/6600 Tran_loss: 6.258
+Epoch:   3/300 Iteration:   55/6600 Tran_loss: 6.088
+Epoch:   3/300 Iteration:   66/6600 Tran_loss: 6.136
+Epoch:   4/300 Iteration:   77/6600 Tran_loss: 6.030
+Epoch:   4/300 Iteration:   88/6600 Tran_loss: 6.090
+Epoch:   5/300 Iteration:   99/6600 Tran_loss: 6.002
+Epoch:   5/300 Iteration:  110/6600 Tran_loss: 6.065
+Epoch:   6/300 Iteration:  121/6600 Tran_loss: 5.981
+Epoch:   6/300 Iteration:  132/6600 Tran_loss: 6.042
+Epoch:   7/300 Iteration:  143/6600 Tran_loss: 5.954
+Epoch:   7/300 Iteration:  154/6600 Tran_loss: 5.987
+Epoch:   8/300 Iteration:  165/6600 Tran_loss: 5.874
+Epoch:   8/300 Iteration:  176/6600 Tran_loss: 5.881
+Epoch:   9/300 Iteration:  187/6600 Tran_loss: 5.787
+Epoch:   9/300 Iteration:  198/6600 Tran_loss: 5.798
+Epoch:  10/300 Iteration:  209/6600 Tran_loss: 5.712
+Epoch:  10/300 Iteration:  220/6600 Tran_loss: 5.727
+Epoch:  11/300 Iteration:  231/6600 Tran_loss: 5.648
+Epoch:  11/300 Iteration:  242/6600 Tran_loss: 5.656
+Epoch:  12/300 Iteration:  253/6600 Tran_loss: 5.584
+Epoch:  12/300 Iteration:  264/6600 Tran_loss: 5.579
+Epoch:  13/300 Iteration:  275/6600 Tran_loss: 5.495
+Epoch:  13/300 Iteration:  286/6600 Tran_loss: 5.497
+Epoch:  14/300 Iteration:  297/6600 Tran_loss: 5.422
+Epoch:  14/300 Iteration:  308/6600 Tran_loss: 5.433
+Epoch:  15/300 Iteration:  319/6600 Tran_loss: 5.370
+Epoch:  15/300 Iteration:  330/6600 Tran_loss: 5.370
+Epoch:  16/300 Iteration:  341/6600 Tran_loss: 5.308
+Epoch:  16/300 Iteration:  352/6600 Tran_loss: 5.300
+Epoch:  17/300 Iteration:  363/6600 Tran_loss: 5.230
+Epoch:  17/300 Iteration:  374/6600 Tran_loss: 5.230
+Epoch:  18/300 Iteration:  385/6600 Tran_loss: 5.167
+Epoch:  18/300 Iteration:  396/6600 Tran_loss: 5.160
+Epoch:  19/300 Iteration:  407/6600 Tran_loss: 5.108
+Epoch:  19/300 Iteration:  418/6600 Tran_loss: 5.099
+Epoch:  20/300 Iteration:  429/6600 Tran_loss: 5.053
+Epoch:  20/300 Iteration:  440/6600 Tran_loss: 5.046
+Epoch:  21/300 Iteration:  451/6600 Tran_loss: 5.003
+Epoch:  21/300 Iteration:  462/6600 Tran_loss: 4.986
+Epoch:  22/300 Iteration:  473/6600 Tran_loss: 4.955
+Epoch:  22/300 Iteration:  484/6600 Tran_loss: 4.942
+Epoch:  23/300 Iteration:  495/6600 Tran_loss: 4.904
+Epoch:  23/300 Iteration:  506/6600 Tran_loss: 4.888
+Epoch:  24/300 Iteration:  517/6600 Tran_loss: 4.862
+Epoch:  24/300 Iteration:  528/6600 Tran_loss: 4.850
+Epoch:  25/300 Iteration:  539/6600 Tran_loss: 4.824
+Epoch:  25/300 Iteration:  550/6600 Tran_loss: 4.809
+Epoch:  26/300 Iteration:  561/6600 Tran_loss: 4.792
+Epoch:  26/300 Iteration:  572/6600 Tran_loss: 4.754
+Epoch:  27/300 Iteration:  583/6600 Tran_loss: 4.757
+Epoch:  27/300 Iteration:  594/6600 Tran_loss: 4.727
+Epoch:  28/300 Iteration:  605/6600 Tran_loss: 4.707
+Epoch:  28/300 Iteration:  616/6600 Tran_loss: 4.689
+Epoch:  29/300 Iteration:  627/6600 Tran_loss: 4.667
+Epoch:  29/300 Iteration:  638/6600 Tran_loss: 4.632
+Epoch:  30/300 Iteration:  649/6600 Tran_loss: 4.639
+Epoch:  30/300 Iteration:  660/6600 Tran_loss: 4.607
+Epoch:  31/300 Iteration:  671/6600 Tran_loss: 4.594
+Epoch:  31/300 Iteration:  682/6600 Tran_loss: 4.576
+Epoch:  32/300 Iteration:  693/6600 Tran_loss: 4.568
+Epoch:  32/300 Iteration:  704/6600 Tran_loss: 4.537
+Epoch:  33/300 Iteration:  715/6600 Tran_loss: 4.532
+Epoch:  33/300 Iteration:  726/6600 Tran_loss: 4.497
+Epoch:  34/300 Iteration:  737/6600 Tran_loss: 4.492
+Epoch:  34/300 Iteration:  748/6600 Tran_loss: 4.469
+Epoch:  35/300 Iteration:  759/6600 Tran_loss: 4.456
+Epoch:  35/300 Iteration:  770/6600 Tran_loss: 4.437
+Epoch:  36/300 Iteration:  781/6600 Tran_loss: 4.441
+Epoch:  36/300 Iteration:  792/6600 Tran_loss: 4.396
+Epoch:  37/300 Iteration:  803/6600 Tran_loss: 4.395
+Epoch:  37/300 Iteration:  814/6600 Tran_loss: 4.388
+Epoch:  38/300 Iteration:  825/6600 Tran_loss: 4.367
+Epoch:  38/300 Iteration:  836/6600 Tran_loss: 4.344
+Epoch:  39/300 Iteration:  847/6600 Tran_loss: 4.356
+Epoch:  39/300 Iteration:  858/6600 Tran_loss: 4.316
+Epoch:  40/300 Iteration:  869/6600 Tran_loss: 4.312
+Epoch:  40/300 Iteration:  880/6600 Tran_loss: 4.281
+Epoch:  41/300 Iteration:  891/6600 Tran_loss: 4.280
+Epoch:  41/300 Iteration:  902/6600 Tran_loss: 4.244
+Epoch:  42/300 Iteration:  913/6600 Tran_loss: 4.247
+Epoch:  42/300 Iteration:  924/6600 Tran_loss: 4.218
+Epoch:  43/300 Iteration:  935/6600 Tran_loss: 4.212
+Epoch:  43/300 Iteration:  946/6600 Tran_loss: 4.186
+Epoch:  44/300 Iteration:  957/6600 Tran_loss: 4.191
+Epoch:  44/300 Iteration:  968/6600 Tran_loss: 4.157
+Epoch:  45/300 Iteration:  979/6600 Tran_loss: 4.163
+Epoch:  45/300 Iteration:  990/6600 Tran_loss: 4.136
+Epoch:  46/300 Iteration: 1001/6600 Tran_loss: 4.145
+Epoch:  46/300 Iteration: 1012/6600 Tran_loss: 4.111
+Epoch:  47/300 Iteration: 1023/6600 Tran_loss: 4.124
+Epoch:  47/300 Iteration: 1034/6600 Tran_loss: 4.114
+Epoch:  48/300 Iteration: 1045/6600 Tran_loss: 4.112
+Epoch:  48/300 Iteration: 1056/6600 Tran_loss: 4.067
+Epoch:  49/300 Iteration: 1067/6600 Tran_loss: 4.060
+Epoch:  49/300 Iteration: 1078/6600 Tran_loss: 4.044
+Epoch:  50/300 Iteration: 1089/6600 Tran_loss: 4.074
+Epoch:  50/300 Iteration: 1100/6600 Tran_loss: 4.030
+Epoch:  51/300 Iteration: 1111/6600 Tran_loss: 4.016
+Epoch:  51/300 Iteration: 1122/6600 Tran_loss: 3.980
+Epoch:  52/300 Iteration: 1133/6600 Tran_loss: 3.998
+Epoch:  52/300 Iteration: 1144/6600 Tran_loss: 3.950
+Epoch:  53/300 Iteration: 1155/6600 Tran_loss: 3.949
+Epoch:  53/300 Iteration: 1166/6600 Tran_loss: 3.903
+Epoch:  54/300 Iteration: 1177/6600 Tran_loss: 3.922
+Epoch:  54/300 Iteration: 1188/6600 Tran_loss: 3.881
+Epoch:  55/300 Iteration: 1199/6600 Tran_loss: 3.886
+Epoch:  55/300 Iteration: 1210/6600 Tran_loss: 3.855
+Epoch:  56/300 Iteration: 1221/6600 Tran_loss: 3.866
+Epoch:  56/300 Iteration: 1232/6600 Tran_loss: 3.827
+Epoch:  57/300 Iteration: 1243/6600 Tran_loss: 3.845
+Epoch:  57/300 Iteration: 1254/6600 Tran_loss: 3.848
+Epoch:  58/300 Iteration: 1265/6600 Tran_loss: 3.888
+Epoch:  58/300 Iteration: 1276/6600 Tran_loss: 3.816
+Epoch:  59/300 Iteration: 1287/6600 Tran_loss: 3.795
+Epoch:  59/300 Iteration: 1298/6600 Tran_loss: 3.768
+Epoch:  60/300 Iteration: 1309/6600 Tran_loss: 3.771
+Epoch:  60/300 Iteration: 1320/6600 Tran_loss: 3.720
+Epoch:  61/300 Iteration: 1331/6600 Tran_loss: 3.717
+Epoch:  61/300 Iteration: 1342/6600 Tran_loss: 3.684
+Epoch:  62/300 Iteration: 1353/6600 Tran_loss: 3.703
+Epoch:  62/300 Iteration: 1364/6600 Tran_loss: 3.664
+Epoch:  63/300 Iteration: 1375/6600 Tran_loss: 3.677
+Epoch:  63/300 Iteration: 1386/6600 Tran_loss: 3.632
+Epoch:  64/300 Iteration: 1397/6600 Tran_loss: 3.653
+Epoch:  64/300 Iteration: 1408/6600 Tran_loss: 3.606
+Epoch:  65/300 Iteration: 1419/6600 Tran_loss: 3.623
+Epoch:  65/300 Iteration: 1430/6600 Tran_loss: 3.573
+Epoch:  66/300 Iteration: 1441/6600 Tran_loss: 3.589
+Epoch:  66/300 Iteration: 1452/6600 Tran_loss: 3.539
+Epoch:  67/300 Iteration: 1463/6600 Tran_loss: 3.562
+Epoch:  67/300 Iteration: 1474/6600 Tran_loss: 3.508
+Epoch:  68/300 Iteration: 1485/6600 Tran_loss: 3.543
+Epoch:  68/300 Iteration: 1496/6600 Tran_loss: 3.489
+Epoch:  69/300 Iteration: 1507/6600 Tran_loss: 3.524
+Epoch:  69/300 Iteration: 1518/6600 Tran_loss: 3.485
+Epoch:  70/300 Iteration: 1529/6600 Tran_loss: 3.538
+Epoch:  70/300 Iteration: 1540/6600 Tran_loss: 3.522
+Epoch:  71/300 Iteration: 1551/6600 Tran_loss: 3.530
+Epoch:  71/300 Iteration: 1562/6600 Tran_loss: 3.444
+Epoch:  72/300 Iteration: 1573/6600 Tran_loss: 3.505
+Epoch:  72/300 Iteration: 1584/6600 Tran_loss: 3.434
+Epoch:  73/300 Iteration: 1595/6600 Tran_loss: 3.433
+Epoch:  73/300 Iteration: 1606/6600 Tran_loss: 3.363
+Epoch:  74/300 Iteration: 1617/6600 Tran_loss: 3.396
+Epoch:  74/300 Iteration: 1628/6600 Tran_loss: 3.331
+Epoch:  75/300 Iteration: 1639/6600 Tran_loss: 3.355
+Epoch:  75/300 Iteration: 1650/6600 Tran_loss: 3.293
+Epoch:  76/300 Iteration: 1661/6600 Tran_loss: 3.321
+Epoch:  76/300 Iteration: 1672/6600 Tran_loss: 3.255
+Epoch:  77/300 Iteration: 1683/6600 Tran_loss: 3.288
+Epoch:  77/300 Iteration: 1694/6600 Tran_loss: 3.228
+Epoch:  78/300 Iteration: 1705/6600 Tran_loss: 3.258
+Epoch:  78/300 Iteration: 1716/6600 Tran_loss: 3.197
+Epoch:  79/300 Iteration: 1727/6600 Tran_loss: 3.235
+Epoch:  79/300 Iteration: 1738/6600 Tran_loss: 3.173
+Epoch:  80/300 Iteration: 1749/6600 Tran_loss: 3.222
+Epoch:  80/300 Iteration: 1760/6600 Tran_loss: 3.163
+Epoch:  81/300 Iteration: 1771/6600 Tran_loss: 3.201
+Epoch:  81/300 Iteration: 1782/6600 Tran_loss: 3.134
+Epoch:  82/300 Iteration: 1793/6600 Tran_loss: 3.166
+Epoch:  82/300 Iteration: 1804/6600 Tran_loss: 3.106
+Epoch:  83/300 Iteration: 1815/6600 Tran_loss: 3.166
+Epoch:  83/300 Iteration: 1826/6600 Tran_loss: 3.096
+Epoch:  84/300 Iteration: 1837/6600 Tran_loss: 3.156
+Epoch:  84/300 Iteration: 1848/6600 Tran_loss: 3.063
+Epoch:  85/300 Iteration: 1859/6600 Tran_loss: 3.106
+Epoch:  85/300 Iteration: 1870/6600 Tran_loss: 3.043
+Epoch:  86/300 Iteration: 1881/6600 Tran_loss: 3.122
+Epoch:  86/300 Iteration: 1892/6600 Tran_loss: 3.036
+Epoch:  87/300 Iteration: 1903/6600 Tran_loss: 3.063
+Epoch:  87/300 Iteration: 1914/6600 Tran_loss: 2.983
+Epoch:  88/300 Iteration: 1925/6600 Tran_loss: 3.070
+Epoch:  88/300 Iteration: 1936/6600 Tran_loss: 2.968
+Epoch:  89/300 Iteration: 1947/6600 Tran_loss: 3.013
+Epoch:  89/300 Iteration: 1958/6600 Tran_loss: 2.920
+Epoch:  90/300 Iteration: 1969/6600 Tran_loss: 2.996
+Epoch:  90/300 Iteration: 1980/6600 Tran_loss: 2.900
+Epoch:  91/300 Iteration: 1991/6600 Tran_loss: 2.949
+Epoch:  91/300 Iteration: 2002/6600 Tran_loss: 2.853
+Epoch:  92/300 Iteration: 2013/6600 Tran_loss: 2.935
+Epoch:  92/300 Iteration: 2024/6600 Tran_loss: 2.843
+Epoch:  93/300 Iteration: 2035/6600 Tran_loss: 2.920
+Epoch:  93/300 Iteration: 2046/6600 Tran_loss: 2.819
+Epoch:  94/300 Iteration: 2057/6600 Tran_loss: 2.902
+Epoch:  94/300 Iteration: 2068/6600 Tran_loss: 2.792
+Epoch:  95/300 Iteration: 2079/6600 Tran_loss: 2.860
+Epoch:  95/300 Iteration: 2090/6600 Tran_loss: 2.767
+Epoch:  96/300 Iteration: 2101/6600 Tran_loss: 2.866
+Epoch:  96/300 Iteration: 2112/6600 Tran_loss: 2.762
+Epoch:  97/300 Iteration: 2123/6600 Tran_loss: 2.830
+Epoch:  97/300 Iteration: 2134/6600 Tran_loss: 2.711
+Epoch:  98/300 Iteration: 2145/6600 Tran_loss: 2.794
+Epoch:  98/300 Iteration: 2156/6600 Tran_loss: 2.706
+Epoch:  99/300 Iteration: 2167/6600 Tran_loss: 2.773
+Epoch:  99/300 Iteration: 2178/6600 Tran_loss: 2.667
+Epoch: 100/300 Iteration: 2189/6600 Tran_loss: 2.760
+Epoch: 100/300 Iteration: 2200/6600 Tran_loss: 2.643
+Epoch: 101/300 Iteration: 2211/6600 Tran_loss: 2.720
+Epoch: 101/300 Iteration: 2222/6600 Tran_loss: 2.618
+Epoch: 102/300 Iteration: 2233/6600 Tran_loss: 2.719
+Epoch: 102/300 Iteration: 2244/6600 Tran_loss: 2.597
+Epoch: 103/300 Iteration: 2255/6600 Tran_loss: 2.680
+Epoch: 103/300 Iteration: 2266/6600 Tran_loss: 2.568
+Epoch: 104/300 Iteration: 2277/6600 Tran_loss: 2.657
+Epoch: 104/300 Iteration: 2288/6600 Tran_loss: 2.556
+Epoch: 105/300 Iteration: 2299/6600 Tran_loss: 2.634
+Epoch: 105/300 Iteration: 2310/6600 Tran_loss: 2.523
+Epoch: 106/300 Iteration: 2321/6600 Tran_loss: 2.615
+Epoch: 106/300 Iteration: 2332/6600 Tran_loss: 2.502
+Epoch: 107/300 Iteration: 2343/6600 Tran_loss: 2.603
+Epoch: 107/300 Iteration: 2354/6600 Tran_loss: 2.470
+Epoch: 108/300 Iteration: 2365/6600 Tran_loss: 2.584
+Epoch: 108/300 Iteration: 2376/6600 Tran_loss: 2.466
+Epoch: 109/300 Iteration: 2387/6600 Tran_loss: 2.549
+Epoch: 109/300 Iteration: 2398/6600 Tran_loss: 2.439
+Epoch: 110/300 Iteration: 2409/6600 Tran_loss: 2.541
+Epoch: 110/300 Iteration: 2420/6600 Tran_loss: 2.416
+Epoch: 111/300 Iteration: 2431/6600 Tran_loss: 2.526
+Epoch: 111/300 Iteration: 2442/6600 Tran_loss: 2.395
+Epoch: 112/300 Iteration: 2453/6600 Tran_loss: 2.491
+Epoch: 112/300 Iteration: 2464/6600 Tran_loss: 2.372
+Epoch: 113/300 Iteration: 2475/6600 Tran_loss: 2.493
+Epoch: 113/300 Iteration: 2486/6600 Tran_loss: 2.359
+Epoch: 114/300 Iteration: 2497/6600 Tran_loss: 2.482
+Epoch: 114/300 Iteration: 2508/6600 Tran_loss: 2.381
+Epoch: 115/300 Iteration: 2519/6600 Tran_loss: 2.500
+Epoch: 115/300 Iteration: 2530/6600 Tran_loss: 2.400
+Epoch: 116/300 Iteration: 2541/6600 Tran_loss: 2.490
+Epoch: 116/300 Iteration: 2552/6600 Tran_loss: 2.320
+Epoch: 117/300 Iteration: 2563/6600 Tran_loss: 2.417
+Epoch: 117/300 Iteration: 2574/6600 Tran_loss: 2.331
+Epoch: 118/300 Iteration: 2585/6600 Tran_loss: 2.463
+Epoch: 118/300 Iteration: 2596/6600 Tran_loss: 2.312
+Epoch: 119/300 Iteration: 2607/6600 Tran_loss: 2.373
+Epoch: 119/300 Iteration: 2618/6600 Tran_loss: 2.269
+Epoch: 120/300 Iteration: 2629/6600 Tran_loss: 2.389
+Epoch: 120/300 Iteration: 2640/6600 Tran_loss: 2.233
+Epoch: 121/300 Iteration: 2651/6600 Tran_loss: 2.310
+Epoch: 121/300 Iteration: 2662/6600 Tran_loss: 2.214
+Epoch: 122/300 Iteration: 2673/6600 Tran_loss: 2.307
+Epoch: 122/300 Iteration: 2684/6600 Tran_loss: 2.178
+Epoch: 123/300 Iteration: 2695/6600 Tran_loss: 2.282
+Epoch: 123/300 Iteration: 2706/6600 Tran_loss: 2.170
+Epoch: 124/300 Iteration: 2717/6600 Tran_loss: 2.249
+Epoch: 124/300 Iteration: 2728/6600 Tran_loss: 2.118
+Epoch: 125/300 Iteration: 2739/6600 Tran_loss: 2.233
+Epoch: 125/300 Iteration: 2750/6600 Tran_loss: 2.101
+Epoch: 126/300 Iteration: 2761/6600 Tran_loss: 2.206
+Epoch: 126/300 Iteration: 2772/6600 Tran_loss: 2.080
+Epoch: 127/300 Iteration: 2783/6600 Tran_loss: 2.181
+Epoch: 127/300 Iteration: 2794/6600 Tran_loss: 2.052
+Epoch: 128/300 Iteration: 2805/6600 Tran_loss: 2.165
+Epoch: 128/300 Iteration: 2816/6600 Tran_loss: 2.027
+Epoch: 129/300 Iteration: 2827/6600 Tran_loss: 2.134
+Epoch: 129/300 Iteration: 2838/6600 Tran_loss: 2.022
+Epoch: 130/300 Iteration: 2849/6600 Tran_loss: 2.140
+Epoch: 130/300 Iteration: 2860/6600 Tran_loss: 1.998
+Epoch: 131/300 Iteration: 2871/6600 Tran_loss: 2.109
+Epoch: 131/300 Iteration: 2882/6600 Tran_loss: 1.967
+Epoch: 132/300 Iteration: 2893/6600 Tran_loss: 2.084
+Epoch: 132/300 Iteration: 2904/6600 Tran_loss: 1.960
+Epoch: 133/300 Iteration: 2915/6600 Tran_loss: 2.074
+Epoch: 133/300 Iteration: 2926/6600 Tran_loss: 1.953
+Epoch: 134/300 Iteration: 2937/6600 Tran_loss: 2.065
+Epoch: 134/300 Iteration: 2948/6600 Tran_loss: 1.946
+Epoch: 135/300 Iteration: 2959/6600 Tran_loss: 2.054
+Epoch: 135/300 Iteration: 2970/6600 Tran_loss: 1.922
+Epoch: 136/300 Iteration: 2981/6600 Tran_loss: 2.035
+Epoch: 136/300 Iteration: 2992/6600 Tran_loss: 1.899
+Epoch: 137/300 Iteration: 3003/6600 Tran_loss: 2.034
+Epoch: 137/300 Iteration: 3014/6600 Tran_loss: 1.906
+Epoch: 138/300 Iteration: 3025/6600 Tran_loss: 2.023
+Epoch: 138/300 Iteration: 3036/6600 Tran_loss: 1.871
+Epoch: 139/300 Iteration: 3047/6600 Tran_loss: 1.984
+Epoch: 139/300 Iteration: 3058/6600 Tran_loss: 1.869
+Epoch: 140/300 Iteration: 3069/6600 Tran_loss: 1.974
+Epoch: 140/300 Iteration: 3080/6600 Tran_loss: 1.874
+Epoch: 141/300 Iteration: 3091/6600 Tran_loss: 1.960
+Epoch: 141/300 Iteration: 3102/6600 Tran_loss: 1.854
+Epoch: 142/300 Iteration: 3113/6600 Tran_loss: 1.939
+Epoch: 142/300 Iteration: 3124/6600 Tran_loss: 1.811
+Epoch: 143/300 Iteration: 3135/6600 Tran_loss: 1.991
+Epoch: 143/300 Iteration: 3146/6600 Tran_loss: 1.810
+Epoch: 144/300 Iteration: 3157/6600 Tran_loss: 1.913
+Epoch: 144/300 Iteration: 3168/6600 Tran_loss: 1.823
+Epoch: 145/300 Iteration: 3179/6600 Tran_loss: 1.916
+Epoch: 145/300 Iteration: 3190/6600 Tran_loss: 1.801
+Epoch: 146/300 Iteration: 3201/6600 Tran_loss: 1.891
+Epoch: 146/300 Iteration: 3212/6600 Tran_loss: 1.764
+Epoch: 147/300 Iteration: 3223/6600 Tran_loss: 1.895
+Epoch: 147/300 Iteration: 3234/6600 Tran_loss: 1.750
+Epoch: 148/300 Iteration: 3245/6600 Tran_loss: 1.858
+Epoch: 148/300 Iteration: 3256/6600 Tran_loss: 1.749
+Epoch: 149/300 Iteration: 3267/6600 Tran_loss: 1.846
+Epoch: 149/300 Iteration: 3278/6600 Tran_loss: 1.706
+Epoch: 150/300 Iteration: 3289/6600 Tran_loss: 1.821
+Epoch: 150/300 Iteration: 3300/6600 Tran_loss: 1.676
+Epoch: 151/300 Iteration: 3311/6600 Tran_loss: 1.800
+Epoch: 151/300 Iteration: 3322/6600 Tran_loss: 1.654
+Epoch: 152/300 Iteration: 3333/6600 Tran_loss: 1.764
+Epoch: 152/300 Iteration: 3344/6600 Tran_loss: 1.638
+Epoch: 153/300 Iteration: 3355/6600 Tran_loss: 1.752
+Epoch: 153/300 Iteration: 3366/6600 Tran_loss: 1.628
+Epoch: 154/300 Iteration: 3377/6600 Tran_loss: 1.751
+Epoch: 154/300 Iteration: 3388/6600 Tran_loss: 1.594
+Epoch: 155/300 Iteration: 3399/6600 Tran_loss: 1.760
+Epoch: 155/300 Iteration: 3410/6600 Tran_loss: 1.601
+Epoch: 156/300 Iteration: 3421/6600 Tran_loss: 1.721
+Epoch: 156/300 Iteration: 3432/6600 Tran_loss: 1.614
+Epoch: 157/300 Iteration: 3443/6600 Tran_loss: 1.711
+Epoch: 157/300 Iteration: 3454/6600 Tran_loss: 1.610
+Epoch: 158/300 Iteration: 3465/6600 Tran_loss: 1.712
+Epoch: 158/300 Iteration: 3476/6600 Tran_loss: 1.595
+Epoch: 159/300 Iteration: 3487/6600 Tran_loss: 1.748
+Epoch: 159/300 Iteration: 3498/6600 Tran_loss: 1.601
+Epoch: 160/300 Iteration: 3509/6600 Tran_loss: 1.712
+Epoch: 160/300 Iteration: 3520/6600 Tran_loss: 1.601
+Epoch: 161/300 Iteration: 3531/6600 Tran_loss: 1.702
+Epoch: 161/300 Iteration: 3542/6600 Tran_loss: 1.574
+Epoch: 162/300 Iteration: 3553/6600 Tran_loss: 1.783
+Epoch: 162/300 Iteration: 3564/6600 Tran_loss: 1.603
+Epoch: 163/300 Iteration: 3575/6600 Tran_loss: 1.787
+Epoch: 163/300 Iteration: 3586/6600 Tran_loss: 1.612
+Epoch: 164/300 Iteration: 3597/6600 Tran_loss: 1.691
+Epoch: 164/300 Iteration: 3608/6600 Tran_loss: 1.581
+Epoch: 165/300 Iteration: 3619/6600 Tran_loss: 1.682
+Epoch: 165/300 Iteration: 3630/6600 Tran_loss: 1.545
+Epoch: 166/300 Iteration: 3641/6600 Tran_loss: 1.669
+Epoch: 166/300 Iteration: 3652/6600 Tran_loss: 1.502
+Epoch: 167/300 Iteration: 3663/6600 Tran_loss: 1.656
+Epoch: 167/300 Iteration: 3674/6600 Tran_loss: 1.477
+Epoch: 168/300 Iteration: 3685/6600 Tran_loss: 1.631
+Epoch: 168/300 Iteration: 3696/6600 Tran_loss: 1.475
+Epoch: 169/300 Iteration: 3707/6600 Tran_loss: 1.602
+Epoch: 169/300 Iteration: 3718/6600 Tran_loss: 1.478
+Epoch: 170/300 Iteration: 3729/6600 Tran_loss: 1.601
+Epoch: 170/300 Iteration: 3740/6600 Tran_loss: 1.454
+Epoch: 171/300 Iteration: 3751/6600 Tran_loss: 1.599
+Epoch: 171/300 Iteration: 3762/6600 Tran_loss: 1.426
+Epoch: 172/300 Iteration: 3773/6600 Tran_loss: 1.581
+Epoch: 172/300 Iteration: 3784/6600 Tran_loss: 1.408
+Epoch: 173/300 Iteration: 3795/6600 Tran_loss: 1.555
+Epoch: 173/300 Iteration: 3806/6600 Tran_loss: 1.414
+Epoch: 174/300 Iteration: 3817/6600 Tran_loss: 1.549
+Epoch: 174/300 Iteration: 3828/6600 Tran_loss: 1.406
+Epoch: 175/300 Iteration: 3839/6600 Tran_loss: 1.551
+Epoch: 175/300 Iteration: 3850/6600 Tran_loss: 1.390
+Epoch: 176/300 Iteration: 3861/6600 Tran_loss: 1.574
+Epoch: 176/300 Iteration: 3872/6600 Tran_loss: 1.403
+Epoch: 177/300 Iteration: 3883/6600 Tran_loss: 1.590
+Epoch: 177/300 Iteration: 3894/6600 Tran_loss: 1.403
+Epoch: 178/300 Iteration: 3905/6600 Tran_loss: 1.570
+Epoch: 178/300 Iteration: 3916/6600 Tran_loss: 1.410
+Epoch: 179/300 Iteration: 3927/6600 Tran_loss: 1.578
+Epoch: 179/300 Iteration: 3938/6600 Tran_loss: 1.422
+Epoch: 180/300 Iteration: 3949/6600 Tran_loss: 1.562
+Epoch: 180/300 Iteration: 3960/6600 Tran_loss: 1.395
+Epoch: 181/300 Iteration: 3971/6600 Tran_loss: 1.537
+Epoch: 181/300 Iteration: 3982/6600 Tran_loss: 1.360
+Epoch: 182/300 Iteration: 3993/6600 Tran_loss: 1.499
+Epoch: 182/300 Iteration: 4004/6600 Tran_loss: 1.336
+Epoch: 183/300 Iteration: 4015/6600 Tran_loss: 1.479
+Epoch: 183/300 Iteration: 4026/6600 Tran_loss: 1.314
+Epoch: 184/300 Iteration: 4037/6600 Tran_loss: 1.466
+Epoch: 184/300 Iteration: 4048/6600 Tran_loss: 1.294
+Epoch: 185/300 Iteration: 4059/6600 Tran_loss: 1.437
+Epoch: 185/300 Iteration: 4070/6600 Tran_loss: 1.269
+Epoch: 186/300 Iteration: 4081/6600 Tran_loss: 1.409
+Epoch: 186/300 Iteration: 4092/6600 Tran_loss: 1.244
+Epoch: 187/300 Iteration: 4103/6600 Tran_loss: 1.378
+Epoch: 187/300 Iteration: 4114/6600 Tran_loss: 1.229
+Epoch: 188/300 Iteration: 4125/6600 Tran_loss: 1.363
+Epoch: 188/300 Iteration: 4136/6600 Tran_loss: 1.207
+Epoch: 189/300 Iteration: 4147/6600 Tran_loss: 1.354
+Epoch: 189/300 Iteration: 4158/6600 Tran_loss: 1.195
+Epoch: 190/300 Iteration: 4169/6600 Tran_loss: 1.333
+Epoch: 190/300 Iteration: 4180/6600 Tran_loss: 1.187
+Epoch: 191/300 Iteration: 4191/6600 Tran_loss: 1.310
+Epoch: 191/300 Iteration: 4202/6600 Tran_loss: 1.166
+Epoch: 192/300 Iteration: 4213/6600 Tran_loss: 1.302
+Epoch: 192/300 Iteration: 4224/6600 Tran_loss: 1.163
+Epoch: 193/300 Iteration: 4235/6600 Tran_loss: 1.301
+Epoch: 193/300 Iteration: 4246/6600 Tran_loss: 1.140
+Epoch: 194/300 Iteration: 4257/6600 Tran_loss: 1.283
+Epoch: 194/300 Iteration: 4268/6600 Tran_loss: 1.129
+Epoch: 195/300 Iteration: 4279/6600 Tran_loss: 1.308
+Epoch: 195/300 Iteration: 4290/6600 Tran_loss: 1.135
+Epoch: 196/300 Iteration: 4301/6600 Tran_loss: 1.295
+Epoch: 196/300 Iteration: 4312/6600 Tran_loss: 1.150
+Epoch: 197/300 Iteration: 4323/6600 Tran_loss: 1.323
+Epoch: 197/300 Iteration: 4334/6600 Tran_loss: 1.194
+Epoch: 198/300 Iteration: 4345/6600 Tran_loss: 1.358
+Epoch: 198/300 Iteration: 4356/6600 Tran_loss: 1.247
+Epoch: 199/300 Iteration: 4367/6600 Tran_loss: 1.423
+Epoch: 199/300 Iteration: 4378/6600 Tran_loss: 1.299
+Epoch: 200/300 Iteration: 4389/6600 Tran_loss: 1.425
+Epoch: 200/300 Iteration: 4400/6600 Tran_loss: 1.238
+Epoch: 201/300 Iteration: 4411/6600 Tran_loss: 1.360
+Epoch: 201/300 Iteration: 4422/6600 Tran_loss: 1.182
+Epoch: 202/300 Iteration: 4433/6600 Tran_loss: 1.279
+Epoch: 202/300 Iteration: 4444/6600 Tran_loss: 1.094
+Epoch: 203/300 Iteration: 4455/6600 Tran_loss: 1.230
+Epoch: 203/300 Iteration: 4466/6600 Tran_loss: 1.041
+Epoch: 204/300 Iteration: 4477/6600 Tran_loss: 1.179
+Epoch: 204/300 Iteration: 4488/6600 Tran_loss: 1.019
+Epoch: 205/300 Iteration: 4499/6600 Tran_loss: 1.158
+Epoch: 205/300 Iteration: 4510/6600 Tran_loss: 0.991
+Epoch: 206/300 Iteration: 4521/6600 Tran_loss: 1.127
+Epoch: 206/300 Iteration: 4532/6600 Tran_loss: 0.963
+Epoch: 207/300 Iteration: 4543/6600 Tran_loss: 1.104
+Epoch: 207/300 Iteration: 4554/6600 Tran_loss: 0.942
+Epoch: 208/300 Iteration: 4565/6600 Tran_loss: 1.092
+Epoch: 208/300 Iteration: 4576/6600 Tran_loss: 0.931
+Epoch: 209/300 Iteration: 4587/6600 Tran_loss: 1.081
+Epoch: 209/300 Iteration: 4598/6600 Tran_loss: 0.924
+Epoch: 210/300 Iteration: 4609/6600 Tran_loss: 1.067
+Epoch: 210/300 Iteration: 4620/6600 Tran_loss: 0.917
+Epoch: 211/300 Iteration: 4631/6600 Tran_loss: 1.060
+Epoch: 211/300 Iteration: 4642/6600 Tran_loss: 0.905
+Epoch: 212/300 Iteration: 4653/6600 Tran_loss: 1.045
+Epoch: 212/300 Iteration: 4664/6600 Tran_loss: 0.882
+Epoch: 213/300 Iteration: 4675/6600 Tran_loss: 1.030
+Epoch: 213/300 Iteration: 4686/6600 Tran_loss: 0.871
+Epoch: 214/300 Iteration: 4697/6600 Tran_loss: 1.019
+Epoch: 214/300 Iteration: 4708/6600 Tran_loss: 0.863
+Epoch: 215/300 Iteration: 4719/6600 Tran_loss: 0.997
+Epoch: 215/300 Iteration: 4730/6600 Tran_loss: 0.851
+Epoch: 216/300 Iteration: 4741/6600 Tran_loss: 0.997
+Epoch: 216/300 Iteration: 4752/6600 Tran_loss: 0.855
+Epoch: 217/300 Iteration: 4763/6600 Tran_loss: 0.993
+Epoch: 217/300 Iteration: 4774/6600 Tran_loss: 0.839
+Epoch: 218/300 Iteration: 4785/6600 Tran_loss: 0.984
+Epoch: 218/300 Iteration: 4796/6600 Tran_loss: 0.842
+Epoch: 219/300 Iteration: 4807/6600 Tran_loss: 1.008
+Epoch: 219/300 Iteration: 4818/6600 Tran_loss: 0.834
+Epoch: 220/300 Iteration: 4829/6600 Tran_loss: 0.962
+Epoch: 220/300 Iteration: 4840/6600 Tran_loss: 0.825
+Epoch: 221/300 Iteration: 4851/6600 Tran_loss: 0.983
+Epoch: 221/300 Iteration: 4862/6600 Tran_loss: 0.821
+Epoch: 222/300 Iteration: 4873/6600 Tran_loss: 0.953
+Epoch: 222/300 Iteration: 4884/6600 Tran_loss: 0.816
+Epoch: 223/300 Iteration: 4895/6600 Tran_loss: 0.966
+Epoch: 223/300 Iteration: 4906/6600 Tran_loss: 0.806
+Epoch: 224/300 Iteration: 4917/6600 Tran_loss: 0.947
+Epoch: 224/300 Iteration: 4928/6600 Tran_loss: 0.803
+Epoch: 225/300 Iteration: 4939/6600 Tran_loss: 0.937
+Epoch: 225/300 Iteration: 4950/6600 Tran_loss: 0.806
+Epoch: 226/300 Iteration: 4961/6600 Tran_loss: 0.932
+Epoch: 226/300 Iteration: 4972/6600 Tran_loss: 0.787
+Epoch: 227/300 Iteration: 4983/6600 Tran_loss: 0.944
+Epoch: 227/300 Iteration: 4994/6600 Tran_loss: 0.791
+Epoch: 228/300 Iteration: 5005/6600 Tran_loss: 0.915
+Epoch: 228/300 Iteration: 5016/6600 Tran_loss: 0.782
+Epoch: 229/300 Iteration: 5027/6600 Tran_loss: 0.930
+Epoch: 229/300 Iteration: 5038/6600 Tran_loss: 0.773
+Epoch: 230/300 Iteration: 5049/6600 Tran_loss: 0.908
+Epoch: 230/300 Iteration: 5060/6600 Tran_loss: 0.768
+Epoch: 231/300 Iteration: 5071/6600 Tran_loss: 0.903
+Epoch: 231/300 Iteration: 5082/6600 Tran_loss: 0.760
+Epoch: 232/300 Iteration: 5093/6600 Tran_loss: 0.899
+Epoch: 232/300 Iteration: 5104/6600 Tran_loss: 0.751
+Epoch: 233/300 Iteration: 5115/6600 Tran_loss: 0.892
+Epoch: 233/300 Iteration: 5126/6600 Tran_loss: 0.757
+Epoch: 234/300 Iteration: 5137/6600 Tran_loss: 0.876
+Epoch: 234/300 Iteration: 5148/6600 Tran_loss: 0.753
+Epoch: 235/300 Iteration: 5159/6600 Tran_loss: 0.877
+Epoch: 235/300 Iteration: 5170/6600 Tran_loss: 0.746
+Epoch: 236/300 Iteration: 5181/6600 Tran_loss: 0.862
+Epoch: 236/300 Iteration: 5192/6600 Tran_loss: 0.730
+Epoch: 237/300 Iteration: 5203/6600 Tran_loss: 0.858
+Epoch: 237/300 Iteration: 5214/6600 Tran_loss: 0.726
+Epoch: 238/300 Iteration: 5225/6600 Tran_loss: 0.851
+Epoch: 238/300 Iteration: 5236/6600 Tran_loss: 0.716
+Epoch: 239/300 Iteration: 5247/6600 Tran_loss: 0.839
+Epoch: 239/300 Iteration: 5258/6600 Tran_loss: 0.704
+Epoch: 240/300 Iteration: 5269/6600 Tran_loss: 0.828
+Epoch: 240/300 Iteration: 5280/6600 Tran_loss: 0.693
+Epoch: 241/300 Iteration: 5291/6600 Tran_loss: 0.821
+Epoch: 241/300 Iteration: 5302/6600 Tran_loss: 0.690
+Epoch: 242/300 Iteration: 5313/6600 Tran_loss: 0.813
+Epoch: 242/300 Iteration: 5324/6600 Tran_loss: 0.668
+Epoch: 243/300 Iteration: 5335/6600 Tran_loss: 0.802
+Epoch: 243/300 Iteration: 5346/6600 Tran_loss: 0.671
+Epoch: 244/300 Iteration: 5357/6600 Tran_loss: 0.808
+Epoch: 244/300 Iteration: 5368/6600 Tran_loss: 0.658
+Epoch: 245/300 Iteration: 5379/6600 Tran_loss: 0.800
+Epoch: 245/300 Iteration: 5390/6600 Tran_loss: 0.665
+Epoch: 246/300 Iteration: 5401/6600 Tran_loss: 0.796
+Epoch: 246/300 Iteration: 5412/6600 Tran_loss: 0.658
+Epoch: 247/300 Iteration: 5423/6600 Tran_loss: 0.798
+Epoch: 247/300 Iteration: 5434/6600 Tran_loss: 0.658
+Epoch: 248/300 Iteration: 5445/6600 Tran_loss: 0.806
+Epoch: 248/300 Iteration: 5456/6600 Tran_loss: 0.651
+Epoch: 249/300 Iteration: 5467/6600 Tran_loss: 0.785
+Epoch: 249/300 Iteration: 5478/6600 Tran_loss: 0.649
+Epoch: 250/300 Iteration: 5489/6600 Tran_loss: 0.770
+Epoch: 250/300 Iteration: 5500/6600 Tran_loss: 0.623
+Epoch: 251/300 Iteration: 5511/6600 Tran_loss: 0.769
+Epoch: 251/300 Iteration: 5522/6600 Tran_loss: 0.616
+Epoch: 252/300 Iteration: 5533/6600 Tran_loss: 0.753
+Epoch: 252/300 Iteration: 5544/6600 Tran_loss: 0.607
+Epoch: 253/300 Iteration: 5555/6600 Tran_loss: 0.728
+Epoch: 253/300 Iteration: 5566/6600 Tran_loss: 0.599
+Epoch: 254/300 Iteration: 5577/6600 Tran_loss: 0.720
+Epoch: 254/300 Iteration: 5588/6600 Tran_loss: 0.586
+Epoch: 255/300 Iteration: 5599/6600 Tran_loss: 0.717
+Epoch: 255/300 Iteration: 5610/6600 Tran_loss: 0.580
+Epoch: 256/300 Iteration: 5621/6600 Tran_loss: 0.704
+Epoch: 256/300 Iteration: 5632/6600 Tran_loss: 0.574
+Epoch: 257/300 Iteration: 5643/6600 Tran_loss: 0.698
+Epoch: 257/300 Iteration: 5654/6600 Tran_loss: 0.579
+Epoch: 258/300 Iteration: 5665/6600 Tran_loss: 0.685
+Epoch: 258/300 Iteration: 5676/6600 Tran_loss: 0.561
+Epoch: 259/300 Iteration: 5687/6600 Tran_loss: 0.677
+Epoch: 259/300 Iteration: 5698/6600 Tran_loss: 0.549
+Epoch: 260/300 Iteration: 5709/6600 Tran_loss: 0.664
+Epoch: 260/300 Iteration: 5720/6600 Tran_loss: 0.544
+Epoch: 261/300 Iteration: 5731/6600 Tran_loss: 0.660
+Epoch: 261/300 Iteration: 5742/6600 Tran_loss: 0.553
+Epoch: 262/300 Iteration: 5753/6600 Tran_loss: 0.652
+Epoch: 262/300 Iteration: 5764/6600 Tran_loss: 0.536
+Epoch: 263/300 Iteration: 5775/6600 Tran_loss: 0.655
+Epoch: 263/300 Iteration: 5786/6600 Tran_loss: 0.531
+Epoch: 264/300 Iteration: 5797/6600 Tran_loss: 0.641
+Epoch: 264/300 Iteration: 5808/6600 Tran_loss: 0.527
+Epoch: 265/300 Iteration: 5819/6600 Tran_loss: 0.643
+Epoch: 265/300 Iteration: 5830/6600 Tran_loss: 0.529
+Epoch: 266/300 Iteration: 5841/6600 Tran_loss: 0.633
+Epoch: 266/300 Iteration: 5852/6600 Tran_loss: 0.515
+Epoch: 267/300 Iteration: 5863/6600 Tran_loss: 0.638
+Epoch: 267/300 Iteration: 5874/6600 Tran_loss: 0.515
+Epoch: 268/300 Iteration: 5885/6600 Tran_loss: 0.621
+Epoch: 268/300 Iteration: 5896/6600 Tran_loss: 0.516
+Epoch: 269/300 Iteration: 5907/6600 Tran_loss: 0.614
+Epoch: 269/300 Iteration: 5918/6600 Tran_loss: 0.505
+Epoch: 270/300 Iteration: 5929/6600 Tran_loss: 0.609
+Epoch: 270/300 Iteration: 5940/6600 Tran_loss: 0.492
+Epoch: 271/300 Iteration: 5951/6600 Tran_loss: 0.611
+Epoch: 271/300 Iteration: 5962/6600 Tran_loss: 0.491
+Epoch: 272/300 Iteration: 5973/6600 Tran_loss: 0.601
+Epoch: 272/300 Iteration: 5984/6600 Tran_loss: 0.496
+Epoch: 273/300 Iteration: 5995/6600 Tran_loss: 0.585
+Epoch: 273/300 Iteration: 6006/6600 Tran_loss: 0.476
+Epoch: 274/300 Iteration: 6017/6600 Tran_loss: 0.589
+Epoch: 274/300 Iteration: 6028/6600 Tran_loss: 0.471
+Epoch: 275/300 Iteration: 6039/6600 Tran_loss: 0.573
+Epoch: 275/300 Iteration: 6050/6600 Tran_loss: 0.466
+Epoch: 276/300 Iteration: 6061/6600 Tran_loss: 0.561
+Epoch: 276/300 Iteration: 6072/6600 Tran_loss: 0.464
+Epoch: 277/300 Iteration: 6083/6600 Tran_loss: 0.561
+Epoch: 277/300 Iteration: 6094/6600 Tran_loss: 0.454
+Epoch: 278/300 Iteration: 6105/6600 Tran_loss: 0.565
+Epoch: 278/300 Iteration: 6116/6600 Tran_loss: 0.450
+Epoch: 279/300 Iteration: 6127/6600 Tran_loss: 0.547
+Epoch: 279/300 Iteration: 6138/6600 Tran_loss: 0.448
+Epoch: 280/300 Iteration: 6149/6600 Tran_loss: 0.551
+Epoch: 280/300 Iteration: 6160/6600 Tran_loss: 0.455
+Epoch: 281/300 Iteration: 6171/6600 Tran_loss: 0.545
+Epoch: 281/300 Iteration: 6182/6600 Tran_loss: 0.444
+Epoch: 282/300 Iteration: 6193/6600 Tran_loss: 0.544
+Epoch: 282/300 Iteration: 6204/6600 Tran_loss: 0.435
+Epoch: 283/300 Iteration: 6215/6600 Tran_loss: 0.537
+Epoch: 283/300 Iteration: 6226/6600 Tran_loss: 0.442
+Epoch: 284/300 Iteration: 6237/6600 Tran_loss: 0.530
+Epoch: 284/300 Iteration: 6248/6600 Tran_loss: 0.442
+Epoch: 285/300 Iteration: 6259/6600 Tran_loss: 0.530
+Epoch: 285/300 Iteration: 6270/6600 Tran_loss: 0.432
+Epoch: 286/300 Iteration: 6281/6600 Tran_loss: 0.527
+Epoch: 286/300 Iteration: 6292/6600 Tran_loss: 0.434
+Epoch: 287/300 Iteration: 6303/6600 Tran_loss: 0.523
+Epoch: 287/300 Iteration: 6314/6600 Tran_loss: 0.436
+Epoch: 288/300 Iteration: 6325/6600 Tran_loss: 0.518
+Epoch: 288/300 Iteration: 6336/6600 Tran_loss: 0.428
+Epoch: 289/300 Iteration: 6347/6600 Tran_loss: 0.524
+Epoch: 289/300 Iteration: 6358/6600 Tran_loss: 0.433
+Epoch: 290/300 Iteration: 6369/6600 Tran_loss: 0.526
+Epoch: 290/300 Iteration: 6380/6600 Tran_loss: 0.428
+Epoch: 291/300 Iteration: 6391/6600 Tran_loss: 0.515
+Epoch: 291/300 Iteration: 6402/6600 Tran_loss: 0.430
+Epoch: 292/300 Iteration: 6413/6600 Tran_loss: 0.509
+Epoch: 292/300 Iteration: 6424/6600 Tran_loss: 0.422
+Epoch: 293/300 Iteration: 6435/6600 Tran_loss: 0.514
+Epoch: 293/300 Iteration: 6446/6600 Tran_loss: 0.417
+Epoch: 294/300 Iteration: 6457/6600 Tran_loss: 0.508
+Epoch: 294/300 Iteration: 6468/6600 Tran_loss: 0.415
+Epoch: 295/300 Iteration: 6479/6600 Tran_loss: 0.500
+Epoch: 295/300 Iteration: 6490/6600 Tran_loss: 0.416
+Epoch: 296/300 Iteration: 6501/6600 Tran_loss: 0.506
+Epoch: 296/300 Iteration: 6512/6600 Tran_loss: 0.412
+Epoch: 297/300 Iteration: 6523/6600 Tran_loss: 0.506
+Epoch: 297/300 Iteration: 6534/6600 Tran_loss: 0.414
+Epoch: 298/300 Iteration: 6545/6600 Tran_loss: 0.498
+Epoch: 298/300 Iteration: 6556/6600 Tran_loss: 0.407
+Epoch: 299/300 Iteration: 6567/6600 Tran_loss: 0.500
+Epoch: 299/300 Iteration: 6578/6600 Tran_loss: 0.425
+Epoch: 300/300 Iteration: 6589/6600 Tran_loss: 0.496
+Epoch: 300/300 Iteration: 6600/6600 Tran_loss: 0.414
 Model Trained and Saved
 </pre>
 </div>
@@ -16099,7 +16317,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -16124,7 +16342,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -16162,7 +16380,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_tensors</span><span class="p">(</span><span class="n">loaded_graph</span><span class="p">):</span>
@@ -16219,7 +16437,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">pick_word</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">int_to_vocab</span><span class="p">):</span>
@@ -16273,7 +16491,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">gen_length</span> <span class="o">=</span> <span class="mi">200</span>
@@ -16336,28 +16554,21 @@ Model Trained and Saved
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>moe_szyslak: so dice. it. push some bucks that&#39;s would long moe_szyslak: drunk years. during!
-dying for wait. my homer_simpson: back right.
-!
-homer_simpson: what marge.! moe_szyslak: up so.
-?
-homer_simpson: they mr.! moe_szyslak: him about.
-?
-homer_simpson: no yeah.! sly here..
-?
-homer_simpson: we okay.! sly here..
-?
-homer_simpson: just ask.! sly here..
-?
-homer_simpson: still don&#39;t.. hey here.. c?
-tony that i.. ah here.. party?
-tony that i.. oh here.. once?
-party that i.. wow here.. got?
-tony that what.. beat here.. him?
-tony that we.. how here..!?
-moe that my miss. by here..!?
-homer&#39;s cut, king. with here..!?
-looks all, there. with had..!? waylon_smithers: like all
+<pre>moe_szyslak: that&#39;s right.
+kent_brockman: so long afternoon.
+lenny_leonard: gee moe, me is this is the little people?
+lenny_leonard: oh, you should be a computer guy...
+lenny_leonard: you callin&#39; this week about you...
+moe_szyslak: sorry, fellas.
+marge_simpson: what the following celebrities want no home?
+homer_simpson: i thought barney!
+lenny_leonard: we&#39;re down out tonight.(sincerely) i&#39;ve not help any opportunity!
+bart_simpson: here you go, pal. you know are our sunday. and i have an curds.
+homer_simpson: no, you put it off his life?
+homer_simpson: hi when she story. if man you can&#39;t like you, send for the uh.. all the best friend ago and the opportunity to? clearly tinkle.
+homer_simpson: peace there, homer. i need to see each time and ancient never got with the other thing like you to give me with a cameras back when&#34; sister drink the have both!
+
+homer_simpson: very finally watered-down her drunk and this guy was the law
 </pre>
 </div>
 </div>

@@ -88,10 +88,9 @@ def create_lookup_tables(text):
     :return: A tuple of dicts (vocab_to_int, int_to_vocab)
     """
 #     TODO: Implement Function
-    counts = Counter(text)
-    vocab = sorted(counts, key=counts.get, reverse=True)
+    vocab = set(text)
     vocab_to_int = {word: i for i, word in enumerate(vocab)}
-    int_to_vocab = {i: word for word, i in vocab_to_int.items()}
+    int_to_vocab = {i: word for i, word in enumerate(vocab)}
     
     # uncorrect code 
 #     vocab_to_int = {word: i for i, word in enumerate(text)}
@@ -263,7 +262,7 @@ tests.test_get_inputs(get_inputs)
 # In[11]:
 
 
-def get_init_cell(batch_size, rnn_size):
+def get_init_cell(batch_size, rnn_size, n_layers=2):
     """
     Create an RNN Cell and initialize it.
     :param batch_size: Size of batches
@@ -271,8 +270,10 @@ def get_init_cell(batch_size, rnn_size):
     :return: Tuple (cell, initialize state)
     """
     # TODO: Implement Function
-    lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size)
-    cell = tf.contrib.rnn.MultiRNNCell([lstm] * 3)
+    def make_lstm(rnn_size):
+        return tf.contrib.rnn.BasicLSTMCell(rnn_size)
+    
+    cell = tf.contrib.rnn.MultiRNNCell([make_lstm(rnn_size) for _ in range(n_layers)])
     initial_state = cell.zero_state(batch_size, tf.float32)
     initial_state = tf.identity(initial_state, name='initial_state')
     return cell, initial_state
@@ -389,6 +390,9 @@ tests.test_build_nn(build_nn)
 # 
 # 例如 `get_batches([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 2, 3)` 将返回下面这个 Numpy 数组：
 
+# In[15]:
+
+
 # [  
 #    First Batch  
 #   [  
@@ -397,7 +401,7 @@ tests.test_build_nn(build_nn)
 #     Batch of targets
 #     [[ 2  3  4], [ 8  9 10]]
 #   ],
-#  
+ 
 #   Second Batch
 #   [
 #     Batch of Input
@@ -407,7 +411,8 @@ tests.test_build_nn(build_nn)
 #   ]
 # ]
 
-# In[15]:
+
+# In[16]:
 
 
 def get_batches(int_text, batch_size, seq_length):
@@ -421,17 +426,29 @@ def get_batches(int_text, batch_size, seq_length):
     # TODO: Implement Function
     words_per_batch = batch_size * seq_length
     n_batches = len(int_text) // words_per_batch
-    int_text = np.array(int_text[:n_batches * words_per_batch])
-    int_text = int_text.reshape(batch_size, -1)
+#     int_text = np.array(int_text[:n_batches * words_per_batch])
+#     int_text = int_text.reshape(batch_size, -1)
     
     batches = []
-    for i in range(0, int_text.shape[1], seq_length):
-        x = int_text[:, i:i+seq_length]
-        y = np.zeros_like(x)
-        y[:, :-1], y[:, -1] = x[:, 1:], x[:, 0]
+    for i in range(n_batches):
+        x, y = [], []
+        for j in range(batch_size):
+            start = i * seq_length + j * n_batches * seq_length
+            x.append(int_text[start:start+seq_length])
+            y.append(int_text[start+1:start+1+seq_length])
         batches.append([x, y])
-        
     return np.array(batches)
+
+# another way
+# def get_batches(int_text, batch_size, seq_length):
+#     words_per_batch = batch_size * seq_length
+#     n_batches = len(int_text) // words_per_batch
+#     x_data = np.array(int_text[:n_batches * words_per_batch])
+#     y_data = np.array(int_text[1:n_batches * words_per_batch + 1])
+#     x_batches = np.split(x_data.reshape(batch_size, -1), n_batches, 1)
+#     y_batches = np.split(y_data.reshape(batch_size, -1), n_batches, 1)
+    
+#     return np.array(list(zip(x_batches, y_batches)))
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
@@ -451,17 +468,17 @@ tests.test_get_batches(get_batches)
 # - 将 `learning_rate` 设置为学习率。
 # - 将 `show_every_n_batches` 设置为神经网络应输出的程序组数量。
 
-# In[16]:
+# In[17]:
 
 
 # Number of Epochs
-num_epochs = 200
+num_epochs = 300
 # Batch Size
 batch_size = 256
 # RNN Size
 rnn_size = 512
 # Embedding Dimension Size
-embed_dim = 256
+embed_dim = 300
 # Sequence Length
 seq_length = 12
 # Learning Rate
@@ -478,7 +495,7 @@ save_dir = './save'
 # ### 创建图表
 # 使用你实现的神经网络创建图表。
 
-# In[17]:
+# In[18]:
 
 
 """
@@ -515,14 +532,14 @@ with train_graph.as_default():
 # ## 训练
 # 在预处理数据中训练神经网络。如果你遇到困难，请查看这个[表格](https://discussions.udacity.com/)，看看是否有人遇到了和你一样的问题。
 
-# In[18]:
+# In[19]:
 
 
 batches = get_batches(int_text, batch_size, seq_length)
 batches.shape
 
 
-# In[19]:
+# In[20]:
 
 
 """
@@ -554,7 +571,7 @@ with tf.Session(graph=train_graph, config=session_cfg) as sess:
 #                     train_loss))
             if iteration % show_every_n_batches == 0:
                 print('Epoch: {:>3}/{}'.format(epoch_i+1, num_epochs),
-                      'Iteration: {:>5}/{}'.format(iteration, batches.shape[0] * num_epochs),
+                      'Iteration: {:>4}/{}'.format(iteration, batches.shape[0] * num_epochs),
                       'Tran_loss: {:.3f}'.format(train_loss))
             iteration += 1
 
@@ -567,7 +584,7 @@ with tf.Session(graph=train_graph, config=session_cfg) as sess:
 # ## 储存参数
 # 储存 `seq_length` 和 `save_dir` 来生成新的电视剧剧本。
 
-# In[20]:
+# In[21]:
 
 
 """
@@ -579,7 +596,7 @@ helper.save_params((seq_length, save_dir))
 
 # # 检查点
 
-# In[29]:
+# In[22]:
 
 
 """
@@ -605,7 +622,7 @@ seq_length, load_dir = helper.load_params()
 # 
 # 返回下列元组中的 tensor `(InputTensor, InitialStateTensor, FinalStateTensor, ProbsTensor)`
 
-# In[30]:
+# In[23]:
 
 
 def get_tensors(loaded_graph):
@@ -631,7 +648,7 @@ tests.test_get_tensors(get_tensors)
 # ### 选择词汇
 # 实现 `pick_word()` 函数来使用 `probabilities` 选择下一个词汇。
 
-# In[31]:
+# In[24]:
 
 
 def pick_word(probabilities, int_to_vocab):
@@ -654,7 +671,7 @@ tests.test_pick_word(pick_word)
 # ## 生成电视剧剧本
 # 这将为你生成一个电视剧剧本。通过设置 `gen_length` 来调整你想生成的剧本长度。
 
-# In[32]:
+# In[25]:
 
 
 gen_length = 200
