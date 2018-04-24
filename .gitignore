@@ -8,9 +8,26 @@ image-classification/cifar-10-batches-py/
 tv-script-generation/save.data-00000-of-00001
 tv-script-generation/preprocess.p
 tv-script-generation/save.meta
-tv-script-generation/save.idex
+tv-script-generation/save.index
 tv-script-generation/checkpoint
 tv-script-generation/params.p
 tv-script-generation/data/
 tv-script-generation/__pycache__/
-tv-script-generation/.ipynd_checkpoints/
+tv-script-generation/.ipynb_checkpoints/
+tv-script-generation/dlnd_tv_script_generation-zh - \345\211\257\346\234\254.html
+tv-script-generation/dlnd_tv_script_generation-zh - 副本.html
+tv-script-generation/dlnd_tv_script_generation.ipynb
+
+# language-translation
+language-translation/preprocess.p
+language-translation/params.p
+language-translation/.ipynb_checkpoints/
+language-translation/__pycache__/
+language-translation/checkpoints/
+language-translation/data/
+
+#face-generation
+face-generation/.ipynb_checkpoints/
+face-generation/__pycache__/
+face-generation/data/
+face-generation/floyd_requirements.txt
