@@ -160,18 +160,24 @@ def discriminator(images, reuse=False, alpha=0.2):
     """
     # TODO: Implement Function
     with tf.variable_scope('discriminator', reuse=reuse):
-        x1 = tf.layers.conv2d(images, 64, 5, strides=2, padding='same')
+        x1 = tf.layers.conv2d(images, 64, 5, strides=2, padding='same', 
+                              kernel_initializer=tf.contrib.layers.xavier_initializer())
         x1 = tf.maximum(alpha * x1, x1)
+        x1 = tf.nn.dropout(x1, 0.8)
         # 14x14x64 now
         
-        x2 = tf.layers.conv2d(x1, 128, 5, strides=2, padding='same')
+        x2 = tf.layers.conv2d(x1, 128, 5, strides=2, padding='same', 
+                             kernel_initializer=tf.contrib.layers.xavier_initializer())
         x2 = tf.layers.batch_normalization(x2, training=True)
         x2 = tf.maximum(alpha * x2, x2)
+        x2 = tf.nn.dropout(x2, 0.8)
         # 7x7x128 now
         
-        x3 = tf.layers.conv2d(x2, 256, 5, strides=2, padding='same')
+        x3 = tf.layers.conv2d(x2, 256, 5, strides=2, padding='same', 
+                             kernel_initializer=tf.contrib.layers.xavier_initializer())
         x3 = tf.layers.batch_normalization(x3, training=True)
         x3 = tf.maximum(alpha * x3, x3)
+        x3 = tf.nn.dropout(x3, 0.8)
         # 4x4x256 now
         
         flat = tf.reshape(x3, [-1, 4*4*256])
@@ -210,20 +216,26 @@ def generator(z, out_channel_dim, is_train=True, alpha=0.2):
         x1 = tf.reshape(x1, [-1, 4, 4, 512])
         x1 = tf.layers.batch_normalization(x1, training=is_train)
         x1 = tf.maximum(alpha * x1, x1)
+        x1 = tf.nn.dropout(x1, 0.8)
         # 4x4x512 now
         
-        x2 = tf.layers.conv2d_transpose(x1, 256, 4, strides=1, padding='valid')
+        x2 = tf.layers.conv2d_transpose(x1, 256, 4, strides=1, padding='valid', 
+                                       kernel_initializer=tf.contrib.layers.xavier_initializer())
         x2 = tf.layers.batch_normalization(x2, training=is_train)
         x2 = tf.maximum(alpha * x2, x2)
+        x2 = tf.nn.dropout(x2, 0.8)
         # 7x7x256 now
         # out_height = in_height * stride + filter_height - 1
         
-        x3 = tf.layers.conv2d_transpose(x2, 128, 5, strides=2, padding='same')
+        x3 = tf.layers.conv2d_transpose(x2, 128, 5, strides=2, padding='same', 
+                                       kernel_initializer=tf.contrib.layers.xavier_initializer())
         x3 = tf.layers.batch_normalization(x3, training=is_train)
         x3 = tf.maximum(alpha * x3, x3)
+        x3 = tf.nn.dropout(x3, 0.8)
         # 14x14x128 now
         
-        logits = tf.layers.conv2d_transpose(x3, out_channel_dim, 5, strides=2, padding='same')
+        logits = tf.layers.conv2d_transpose(x3, out_channel_dim, 5, strides=2, padding='same', 
+                                           kernel_initializer=tf.contrib.layers.xavier_initializer())
         # 28x28xout_channel_dim now
         out = tf.tanh(logits)
     
@@ -246,7 +258,7 @@ tests.test_generator(generator, tf)
 # In[8]:
 
 
-def model_loss(input_real, input_z, out_channel_dim):
+def model_loss(input_real, input_z, out_channel_dim, smooth=0.1):
     """
     Get the loss for the discriminator and generator
     :param input_real: Images from the real dataset
@@ -262,7 +274,7 @@ def model_loss(input_real, input_z, out_channel_dim):
     g_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=d_logits_fake,
                                                                    labels=tf.ones_like(d_model_fake)))
     d_loss_real = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=d_logits_real,
-                                                                         labels=tf.ones_like(d_model_real)))
+                                                                         labels=tf.ones_like(d_model_real) * (1 - smooth)))
     d_loss_fake = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=d_logits_fake,
                                                                          labels=tf.zeros_like(d_model_fake)))
     d_loss = d_loss_real + d_loss_fake
@@ -382,6 +394,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
         sess.run(tf.global_variables_initializer())
         for epoch_i in range(epoch_count):
             for batch_images in get_batches(batch_size):
+                batch_images = batch_images * 2
                 steps += 1 
                 
                 batch_z = np.random.uniform(-1, 1, size=(batch_size, z_dim))
@@ -406,19 +419,19 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
 # ### MNIST
 # 在 MNIST 上测试你的 GANs 模型。经过 2 次迭代，GANs 应该能够生成类似手写数字的图像。确保生成器 (generator) 低于辨别器 (discriminator) 的损失，或接近 0。
 
-# In[14]:
+# In[12]:
 
 
-batch_size = 128
+batch_size = 64
 z_dim = 100
-learning_rate = 0.0002
+learning_rate = 0.001
 beta1 = 0.5
 
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
 """
-epochs = 8
+epochs = 2
 
 mnist_dataset = helper.Dataset('mnist', glob(os.path.join(data_dir, 'mnist/*.jpg')))
 with tf.Graph().as_default():
@@ -429,19 +442,19 @@ with tf.Graph().as_default():
 # ### CelebA
 # 在 CelebA 上运行你的 GANs 模型。在一般的GPU上运行每次迭代大约需要 20 分钟。你可以运行整个迭代，或者当 GANs 开始产生真实人脸图像时停止它。
 
-# In[15]:
+# In[13]:
 
 
-batch_size = 128
+batch_size = 32
 z_dim = 100
-learning_rate = 0.0002
+learning_rate = 0.001
 beta1 = 0.5
 
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
 """
-epochs = 16
+epochs = 1
 
 celeba_dataset = helper.Dataset('celeba', glob(os.path.join(data_dir, 'img_align_celeba/*.jpg')))
 with tf.Graph().as_default():
